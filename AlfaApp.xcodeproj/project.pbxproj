@@ -1,0 +1,635 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		67C793F32E9E88E700B35AA3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F22E9E88E700B35AA3 /* FirebaseAnalytics */; };
+		67C793F52E9E88E700B35AA3 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F42E9E88E700B35AA3 /* FirebaseAppCheck */; };
+		67C793F72E9E88E700B35AA3 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F62E9E88E700B35AA3 /* FirebaseFunctions */; };
+		67C793FA2E9E893A00B35AA3 /* SecurityKit in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F92E9E893A00B35AA3 /* SecurityKit */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		67FCB9712E9D4A57005C63B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 67FCB9522E9D4A56005C63B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 67FCB9592E9D4A56005C63B7;
+			remoteInfo = AlfaApp;
+		};
+		67FCB97B2E9D4A57005C63B7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 67FCB9522E9D4A56005C63B7 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 67FCB9592E9D4A56005C63B7;
+			remoteInfo = AlfaApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		67FCB9702E9D4A57005C63B7 /* AlfaAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfaAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		67FCB97A2E9D4A57005C63B7 /* AlfaAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfaAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		67FCB9822E9D4A57005C63B7 /* Exceptions for "AlfaApp" folder in "AlfaApp" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 67FCB9592E9D4A56005C63B7 /* AlfaApp */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		67FCB95C2E9D4A56005C63B7 /* AlfaApp */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				67FCB9822E9D4A57005C63B7 /* Exceptions for "AlfaApp" folder in "AlfaApp" target */,
+			);
+			path = AlfaApp;
+			sourceTree = "<group>";
+		};
+		67FCB9732E9D4A57005C63B7 /* AlfaAppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AlfaAppTests;
+			sourceTree = "<group>";
+		};
+		67FCB97D2E9D4A57005C63B7 /* AlfaAppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AlfaAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		67FCB9572E9D4A56005C63B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67C793F72E9E88E700B35AA3 /* FirebaseFunctions in Frameworks */,
+				67C793F52E9E88E700B35AA3 /* FirebaseAppCheck in Frameworks */,
+				67C793F32E9E88E700B35AA3 /* FirebaseAnalytics in Frameworks */,
+				67C793FA2E9E893A00B35AA3 /* SecurityKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB96D2E9D4A57005C63B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB9772E9D4A57005C63B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		67FCB9512E9D4A56005C63B7 = {
+			isa = PBXGroup;
+			children = (
+				67FCB95C2E9D4A56005C63B7 /* AlfaApp */,
+				67FCB9732E9D4A57005C63B7 /* AlfaAppTests */,
+				67FCB97D2E9D4A57005C63B7 /* AlfaAppUITests */,
+				67FCB95B2E9D4A56005C63B7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		67FCB95B2E9D4A56005C63B7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */,
+				67FCB9702E9D4A57005C63B7 /* AlfaAppTests.xctest */,
+				67FCB97A2E9D4A57005C63B7 /* AlfaAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		67FCB9592E9D4A56005C63B7 /* AlfaApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67FCB9832E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaApp" */;
+			buildPhases = (
+				67FCB9562E9D4A56005C63B7 /* Sources */,
+				67FCB9572E9D4A56005C63B7 /* Frameworks */,
+				67FCB9582E9D4A56005C63B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				67FCB95C2E9D4A56005C63B7 /* AlfaApp */,
+			);
+			name = AlfaApp;
+			packageProductDependencies = (
+				67C793F22E9E88E700B35AA3 /* FirebaseAnalytics */,
+				67C793F42E9E88E700B35AA3 /* FirebaseAppCheck */,
+				67C793F62E9E88E700B35AA3 /* FirebaseFunctions */,
+				67C793F92E9E893A00B35AA3 /* SecurityKit */,
+			);
+			productName = AlfaApp;
+			productReference = 67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		67FCB96F2E9D4A57005C63B7 /* AlfaAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67FCB9882E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaAppTests" */;
+			buildPhases = (
+				67FCB96C2E9D4A57005C63B7 /* Sources */,
+				67FCB96D2E9D4A57005C63B7 /* Frameworks */,
+				67FCB96E2E9D4A57005C63B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				67FCB9722E9D4A57005C63B7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				67FCB9732E9D4A57005C63B7 /* AlfaAppTests */,
+			);
+			name = AlfaAppTests;
+			packageProductDependencies = (
+			);
+			productName = AlfaAppTests;
+			productReference = 67FCB9702E9D4A57005C63B7 /* AlfaAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		67FCB9792E9D4A57005C63B7 /* AlfaAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67FCB98B2E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaAppUITests" */;
+			buildPhases = (
+				67FCB9762E9D4A57005C63B7 /* Sources */,
+				67FCB9772E9D4A57005C63B7 /* Frameworks */,
+				67FCB9782E9D4A57005C63B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				67FCB97C2E9D4A57005C63B7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				67FCB97D2E9D4A57005C63B7 /* AlfaAppUITests */,
+			);
+			name = AlfaAppUITests;
+			packageProductDependencies = (
+			);
+			productName = AlfaAppUITests;
+			productReference = 67FCB97A2E9D4A57005C63B7 /* AlfaAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		67FCB9522E9D4A56005C63B7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					67FCB9592E9D4A56005C63B7 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					67FCB96F2E9D4A57005C63B7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 67FCB9592E9D4A56005C63B7;
+					};
+					67FCB9792E9D4A57005C63B7 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 67FCB9592E9D4A56005C63B7;
+					};
+				};
+			};
+			buildConfigurationList = 67FCB9552E9D4A56005C63B7 /* Build configuration list for PBXProject "AlfaApp" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 67FCB9512E9D4A56005C63B7;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 67FCB95B2E9D4A56005C63B7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				67FCB9592E9D4A56005C63B7 /* AlfaApp */,
+				67FCB96F2E9D4A57005C63B7 /* AlfaAppTests */,
+				67FCB9792E9D4A57005C63B7 /* AlfaAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		67FCB9582E9D4A56005C63B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB96E2E9D4A57005C63B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB9782E9D4A57005C63B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		67FCB9562E9D4A56005C63B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB96C2E9D4A57005C63B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		67FCB9762E9D4A57005C63B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		67FCB9722E9D4A57005C63B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 67FCB9592E9D4A56005C63B7 /* AlfaApp */;
+			targetProxy = 67FCB9712E9D4A57005C63B7 /* PBXContainerItemProxy */;
+		};
+		67FCB97C2E9D4A57005C63B7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 67FCB9592E9D4A56005C63B7 /* AlfaApp */;
+			targetProxy = 67FCB97B2E9D4A57005C63B7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		67FCB9842E9D4A57005C63B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AlfaApp/AlfaApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AlfaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Alfa;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		67FCB9852E9D4A57005C63B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = AlfaApp/AlfaApp.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AlfaApp/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Alfa;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		67FCB9862E9D4A57005C63B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		67FCB9872E9D4A57005C63B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		67FCB9892E9D4A57005C63B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AlfaApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AlfaApp";
+			};
+			name = Debug;
+		};
+		67FCB98A2E9D4A57005C63B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AlfaApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AlfaApp";
+			};
+			name = Release;
+		};
+		67FCB98C2E9D4A57005C63B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AlfaApp;
+			};
+			name = Debug;
+		};
+		67FCB98D2E9D4A57005C63B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ozelonuryilmaz.AlfaAppUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = AlfaApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		67FCB9552E9D4A56005C63B7 /* Build configuration list for PBXProject "AlfaApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67FCB9862E9D4A57005C63B7 /* Debug */,
+				67FCB9872E9D4A57005C63B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67FCB9832E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67FCB9842E9D4A57005C63B7 /* Debug */,
+				67FCB9852E9D4A57005C63B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67FCB9882E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67FCB9892E9D4A57005C63B7 /* Debug */,
+				67FCB98A2E9D4A57005C63B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		67FCB98B2E9D4A57005C63B7 /* Build configuration list for PBXNativeTarget "AlfaAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67FCB98C2E9D4A57005C63B7 /* Debug */,
+				67FCB98D2E9D4A57005C63B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.4.0;
+			};
+		};
+		67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/FuturraGroup/SecurityKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		67C793F22E9E88E700B35AA3 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		67C793F42E9E88E700B35AA3 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		67C793F62E9E88E700B35AA3 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		67C793F92E9E893A00B35AA3 /* SecurityKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */;
+			productName = SecurityKit;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 67FCB9522E9D4A56005C63B7 /* Project object */;
+}
