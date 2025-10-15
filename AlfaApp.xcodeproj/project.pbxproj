@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		673310522E9FABE100554D22 /* AlfaDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 673310512E9FABE100554D22 /* AlfaDomain */; };
+		673310672E9FB08B00554D22 /* AlfaData in Frameworks */ = {isa = PBXBuildFile; productRef = 673310662E9FB08B00554D22 /* AlfaData */; };
+		673310752E9FB1C400554D22 /* AlfaData in Resources */ = {isa = PBXBuildFile; fileRef = 673310742E9FB1C400554D22 /* AlfaData */; };
 		67C793F32E9E88E700B35AA3 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F22E9E88E700B35AA3 /* FirebaseAnalytics */; };
 		67C793F52E9E88E700B35AA3 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F42E9E88E700B35AA3 /* FirebaseAppCheck */; };
 		67C793F72E9E88E700B35AA3 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F62E9E88E700B35AA3 /* FirebaseFunctions */; };
 		67C793FA2E9E893A00B35AA3 /* SecurityKit in Frameworks */ = {isa = PBXBuildFile; productRef = 67C793F92E9E893A00B35AA3 /* SecurityKit */; };
+		67E19B342E9FB2DE00E51E33 /* AlfaPlayerKit in Frameworks */ = {isa = PBXBuildFile; productRef = 67E19B332E9FB2DE00E51E33 /* AlfaPlayerKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +35,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		673310532E9FAC0A00554D22 /* AlfaDomain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AlfaDomain; sourceTree = "<group>"; };
+		673310742E9FB1C400554D22 /* AlfaData */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AlfaData; sourceTree = "<group>"; };
+		67E19B352E9FB2F500E51E33 /* AlfaPlayerKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AlfaPlayerKit; sourceTree = "<group>"; };
 		67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AlfaApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FCB9702E9D4A57005C63B7 /* AlfaAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfaAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FCB97A2E9D4A57005C63B7 /* AlfaAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AlfaAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -40,7 +47,7 @@
 		67FCB9822E9D4A57005C63B7 /* Exceptions for "AlfaApp" folder in "AlfaApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				App/AppCore/Info.plist,
+				AppCore/Info.plist,
 			);
 			target = 67FCB9592E9D4A56005C63B7 /* AlfaApp */;
 		};
@@ -74,7 +81,10 @@
 			files = (
 				67C793F72E9E88E700B35AA3 /* FirebaseFunctions in Frameworks */,
 				67C793F52E9E88E700B35AA3 /* FirebaseAppCheck in Frameworks */,
+				67E19B342E9FB2DE00E51E33 /* AlfaPlayerKit in Frameworks */,
 				67C793F32E9E88E700B35AA3 /* FirebaseAnalytics in Frameworks */,
+				673310522E9FABE100554D22 /* AlfaDomain in Frameworks */,
+				673310672E9FB08B00554D22 /* AlfaData in Frameworks */,
 				67C793FA2E9E893A00B35AA3 /* SecurityKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -96,12 +106,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		673310552E9FAF3400554D22 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		67FCB9512E9D4A56005C63B7 = {
 			isa = PBXGroup;
 			children = (
+				67E19B352E9FB2F500E51E33 /* AlfaPlayerKit */,
+				673310742E9FB1C400554D22 /* AlfaData */,
+				673310532E9FAC0A00554D22 /* AlfaDomain */,
 				67FCB95C2E9D4A56005C63B7 /* AlfaApp */,
 				67FCB9732E9D4A57005C63B7 /* AlfaAppTests */,
 				67FCB97D2E9D4A57005C63B7 /* AlfaAppUITests */,
+				673310552E9FAF3400554D22 /* Frameworks */,
 				67FCB95B2E9D4A56005C63B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -140,6 +161,9 @@
 				67C793F42E9E88E700B35AA3 /* FirebaseAppCheck */,
 				67C793F62E9E88E700B35AA3 /* FirebaseFunctions */,
 				67C793F92E9E893A00B35AA3 /* SecurityKit */,
+				673310512E9FABE100554D22 /* AlfaDomain */,
+				673310662E9FB08B00554D22 /* AlfaData */,
+				67E19B332E9FB2DE00E51E33 /* AlfaPlayerKit */,
 			);
 			productName = AlfaApp;
 			productReference = 67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */;
@@ -226,6 +250,9 @@
 			packageReferences = (
 				67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */,
+				673310502E9FABE100554D22 /* XCLocalSwiftPackageReference "AlfaDomain" */,
+				673310652E9FB08B00554D22 /* XCLocalSwiftPackageReference "AlfaData" */,
+				67E19B322E9FB2DE00E51E33 /* XCLocalSwiftPackageReference "AlfaPlayerKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 67FCB95B2E9D4A56005C63B7 /* Products */;
@@ -244,6 +271,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				673310752E9FB1C400554D22 /* AlfaData in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,7 +338,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AlfaApp/App/AppCore/Info.plist;
+				INFOPLIST_FILE = AlfaApp/AppCore/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Alfa;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -339,7 +367,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = AlfaApp/App/AppCore/Info.plist;
+				INFOPLIST_FILE = AlfaApp/AppCore/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = Alfa;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -587,26 +615,49 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		673310502E9FABE100554D22 /* XCLocalSwiftPackageReference "AlfaDomain" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AlfaDomain;
+		};
+		673310652E9FB08B00554D22 /* XCLocalSwiftPackageReference "AlfaData" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AlfaData;
+		};
+		67E19B322E9FB2DE00E51E33 /* XCLocalSwiftPackageReference "AlfaPlayerKit" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = AlfaPlayerKit;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 12.4.0;
+				kind = exactVersion;
+				version = 12.4.0;
 			};
 		};
 		67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/FuturraGroup/SecurityKit.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.7.0;
+				kind = exactVersion;
+				version = 1.7.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		673310512E9FABE100554D22 /* AlfaDomain */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AlfaDomain;
+		};
+		673310662E9FB08B00554D22 /* AlfaData */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AlfaData;
+		};
 		67C793F22E9E88E700B35AA3 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -626,6 +677,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 67C793F82E9E893A00B35AA3 /* XCRemoteSwiftPackageReference "SecurityKit" */;
 			productName = SecurityKit;
+		};
+		67E19B332E9FB2DE00E51E33 /* AlfaPlayerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AlfaPlayerKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
