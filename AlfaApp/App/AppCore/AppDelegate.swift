@@ -43,11 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 final class AlfaAppCheckProviderFactory: NSObject, AppCheckProviderFactory {
   func createProvider(with app: FirebaseApp) -> AppCheckProvider? {
     #if targetEnvironment(simulator)
-      // Simülatör için App Check çalışmaz, bu yüzden test için bir debug provider kullanın.
-      // Konsolda çıkacak olan token'ı Firebase projenize eklemeniz gerekecek.
+      // Simülatör için App Check çalışmaz, bu yüzden test için bir debug provider kullanıldı
+      // Konsolda çıkacak olan token'ı Firebase projene eklemeyi unutma
       return AppCheckDebugProvider(app: app)
     #else
-      // Gerçek cihazlar için DeviceCheck provider'ını kullanın.
+      // Gerçek cihazlar için DeviceCheck provider'ını kullan
       return DeviceCheckProvider(app: app)
     #endif
   }

@@ -2,14 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>LSApplicationQueriesSchemes</key>
-    <array>
-        <string>cydia</string>
-        <string>undecimus</string>
-        <string>sileo</string>
-        <string>zbra</string>
-        <string>filza</string>
-    </array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>cydia</string>
+		<string>undecimus</string>
+		<string>sileo</string>
+		<string>zbra</string>
+		<string>filza</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -23,8 +23,6 @@
 					<string>Default Configuration</string>
 					<key>UISceneDelegateClassName</key>
 					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
-					<key>UISceneStoryboardFile</key>
-					<string>Main</string>
 				</dict>
 			</array>
 		</dict>
