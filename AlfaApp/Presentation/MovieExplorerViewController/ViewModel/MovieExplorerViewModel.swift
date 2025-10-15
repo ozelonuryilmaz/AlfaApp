@@ -37,6 +37,8 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
         self.coordinator = coordinator
         self.vmLogic = vmLogic
         super.init()
+        
+        loadGenres()
     }
     
 }
@@ -45,6 +47,21 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
 // MARK: Service
 internal extension MovieExplorerViewModel {
     
+    func loadGenres() {
+        Task { @MainActor in
+            await handleResourceAsync(
+                request: { [weak self] in
+                    try await self?.repository.fetchGenres() // await sonrası default background thread'e geçecek
+                },
+                errorState: errorState,
+                callbackSuccess: { [weak self] genres in
+                    self?.viewStateShowLoadingProgress(isProgress: false)
+                    print("Response: \(String(describing: genres))")
+                }
+            )
+        }
+    }
+
 }
 
 // MARK: States

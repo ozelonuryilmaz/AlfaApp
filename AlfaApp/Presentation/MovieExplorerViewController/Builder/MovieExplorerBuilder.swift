@@ -12,7 +12,9 @@ enum MovieExplorerBuilder {
     
     static func generate(coordinator: IMovieExplorerCoordinator) -> MovieExplorerViewController {
         
-        let repository: IMovieExplorerRepository = MovieExplorerRepository()
+        let genreUsecase = GenreUseCaseProvider.makeGenreUseCase()
+        let repository: IMovieExplorerRepository = MovieExplorerRepository(genreUsecase: genreUsecase)
+        
         let vmLogic: IMovieExplorerVMLogic = MovieExplorerVMLogic()
         
         let viewModel: IMovieExplorerViewModel = MovieExplorerViewModel(
