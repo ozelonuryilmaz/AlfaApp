@@ -24,9 +24,6 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
     
     override func setupView() {
         
-        print("Log: ** \(PlayerTest.mes)")
-        print("Log: ** \(DomainTest.mes)")
-        print("Log: ** \(DataTest.mes)")
     }
     
     override func initialComponents() {

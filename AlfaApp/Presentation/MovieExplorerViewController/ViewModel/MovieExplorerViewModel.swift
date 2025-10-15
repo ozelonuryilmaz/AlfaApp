@@ -49,16 +49,12 @@ internal extension MovieExplorerViewModel {
     
     func loadGenres() {
         Task { @MainActor in
-            await handleResourceAsync(
-                request: { [weak self] in
-                    try await self?.repository.fetchGenres() // await sonrası default background thread'e geçecek
-                },
-                errorState: errorState,
-                callbackSuccess: { [weak self] genres in
-                    self?.viewStateShowLoadingProgress(isProgress: false)
-                    print("Response: \(String(describing: genres))")
-                }
-            )
+            do {
+                let genres = try await repository.fetchGenres() // await sonrası default background thread'e geçecek
+                print("Log *** genres: \(genres) *** ")
+            } catch {
+                errorState.value = error.localizedDescription
+            }
         }
     }
 

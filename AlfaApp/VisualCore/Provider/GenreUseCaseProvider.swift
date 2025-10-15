@@ -12,7 +12,8 @@ enum GenreUseCaseProvider {
     
     static func makeGenreUseCase() -> IGenresUseCase {
         let networkManager: INetworkManager = NetworkManager()
-        let remoteDataSource: IGenresRemoteDataSource = GenresRemoteDataSource(networkManager: networkManager)
+        let securityManager: ISecurityManager = SecurityManager()
+        let remoteDataSource: IGenresRemoteDataSource = GenresRemoteDataSource(networkManager: networkManager, securityManager: securityManager)
         let genresMapper: GenresMapper = GenresMapper()
         let genresRepositoryImpl: IGenresRepository = GenresRepositoryImpl(remoteDataSource: remoteDataSource, genresMapper: genresMapper)
         let genreUsecase: IGenresUseCase = GenresUseCase(genresRepository: genresRepositoryImpl)

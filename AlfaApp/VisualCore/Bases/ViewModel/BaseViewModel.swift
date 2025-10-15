@@ -16,27 +16,4 @@ class BaseViewModel {
     deinit {
         print("killed: \(type(of: self))")
     }
-    
-    @MainActor
-    public func handleResourceAsync<RESPONSE>(
-        request: @escaping () async throws -> RESPONSE,
-        errorState: ErrorStateSubject,
-        callbackLoading: ((Bool) -> Void)? = nil,
-        callbackSuccess: ((RESPONSE?) -> Void)? = nil,
-        callbackComplete: (() -> Void)? = nil
-    ) async {
-        callbackLoading?(true)
-
-        do {
-            let result = try await request()
-            callbackSuccess?(result)
-        } catch {
-            errorState.value = "Bir Hata Oluştu"
-        }
-
-        callbackLoading?(false)
-        callbackComplete?()
-    }
-
-    
 }

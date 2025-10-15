@@ -13,14 +13,19 @@ public protocol IGenresRemoteDataSource {
 
 final public class GenresRemoteDataSource: IGenresRemoteDataSource {
     private let networkManager: INetworkManager
+    private let securityManager: ISecurityManager
 
-    public init(networkManager: INetworkManager) {
+    public init(networkManager: INetworkManager,
+                securityManager: ISecurityManager) {
         self.networkManager = networkManager
+        self.securityManager = securityManager
     }
 
     public func fetchGenres() async throws -> GenresDTO {
         
-        guard let request = APIEndpoint.getProducts() else {
+        let apiKey: String = try await securityManager.fetchSecureApiKey()
+        
+        guard let request = try? APIRequest.genres.buildRequest(apiKey: apiKey) else {
             throw NetworkError.invalidURL
         }
         
