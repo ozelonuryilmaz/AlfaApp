@@ -7,25 +7,33 @@
 //
 
 import Foundation
-import CoreGraphics
 
 protocol IMovieExplorerViewModel: AnyObject {
     var viewState: ScreenStateSubject<MovieExplorerViewState> { get }
     var errorState: ErrorStateSubject { get }
-    var genres: [GenreUIModel] { get }
-    var currentGenreId: Int? { get }
     
-    init(repository: IMovieExplorerRepository, coordinator: IMovieExplorerCoordinator, vmLogic: IMovieExplorerVMLogic, cacheService: IMovieCacheService)
+    init(repository: IMovieExplorerRepository,
+         coordinator: IMovieExplorerCoordinator,
+         vmLogic: IMovieExplorerVMLogic,
+         cacheService: IMovieCacheService)
     
+    // Services
     func fetchInitialData()
     func loadMovies(for genreId: Int)
     func loadNextPage()
-    func saveScrollPosition(_ offset: CGPoint, for genreId: Int)
+    
+    // Genres
     func setCurrentGenre(genreId: Int)
+    func getGenreName(for genreId: Int) -> String?
+    func getGenre(before genreId: Int) -> GenreUIModel?
+    func getGenre(after genreId: Int) -> GenreUIModel?
+    func getFirstGenreId() -> Int?
+    
+    // Cache
+    func saveScrollPosition(_ offset: CGPoint, for genreId: Int)
 }
 
 final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
-    
     private let repository: IMovieExplorerRepository
     private let coordinator: IMovieExplorerCoordinator
     private var vmLogic: IMovieExplorerVMLogic
@@ -34,26 +42,29 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
     var viewState = ScreenStateSubject<MovieExplorerViewState>(nil)
     var errorState = ErrorStateSubject(nil)
     
-    var genres: [GenreUIModel] { vmLogic.genres }
-    var currentGenreId: Int? { vmLogic.currentGenreId }
-
-    required init(repository: IMovieExplorerRepository, coordinator: IMovieExplorerCoordinator, vmLogic: IMovieExplorerVMLogic, cacheService: IMovieCacheService) {
+    required init(repository: IMovieExplorerRepository,
+                  coordinator: IMovieExplorerCoordinator,
+                  vmLogic: IMovieExplorerVMLogic,
+                  cacheService: IMovieCacheService) {
         self.repository = repository
         self.coordinator = coordinator
         self.vmLogic = vmLogic
         self.cacheService = cacheService
         super.init()
     }
+}
 
+// MARK: Services
+internal extension MovieExplorerViewModel {
+    
     func fetchInitialData() {
         viewState.value = .initialLoading
         Task { @MainActor in
             do {
                 let genresData = try await repository.fetchGenres()
-                self.vmLogic.genres = genresData.genres
+                self.vmLogic.setGenresResponse(genresData.genres)
                 viewState.value = .genresLoaded
                 
-                // VMLogic'ten ilk genre ID'sini al ve mevcut genre olarak ayarla
                 if let firstGenreId = self.vmLogic.getFirstGenreId() {
                     self.setCurrentGenre(genreId: firstGenreId)
                     loadMovies(for: firstGenreId)
@@ -82,9 +93,9 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
             }
         }
     }
-
+    
     func loadNextPage() {
-        guard let genreId = self.currentGenreId,
+        guard let genreId = self.vmLogic.currentGenreId,
               let currentEntry = cacheService.getEntry(for: genreId) else { return }
         let nextPage = currentEntry.currentPage + 1
         
@@ -104,13 +115,37 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
             }
         }
     }
-    
-    func saveScrollPosition(_ offset: CGPoint, for genreId: Int) {
-        cacheService.updateContentOffset(offset, for: genreId)
-    }
+}
+
+// MARK: Genres
+internal extension MovieExplorerViewModel {
     
     func setCurrentGenre(genreId: Int) {
         vmLogic.setCurrentGenre(genreId: genreId)
+    }
+    
+    func getGenreName(for genreId: Int) -> String? {
+        return vmLogic.getGenreName(for: genreId)
+    }
+    
+    func getGenre(before genreId: Int) -> GenreUIModel? {
+        return vmLogic.getGenre(before: genreId)
+    }
+    
+    func getGenre(after genreId: Int) -> GenreUIModel? {
+        return vmLogic.getGenre(after: genreId)
+    }
+    
+    func getFirstGenreId() -> Int? {
+        return vmLogic.getFirstGenreId()
+    }
+}
+
+// MARK: Cache
+internal extension MovieExplorerViewModel {
+    
+    func saveScrollPosition(_ offset: CGPoint, for genreId: Int) {
+        cacheService.updateContentOffset(offset, for: genreId)
     }
 }
 

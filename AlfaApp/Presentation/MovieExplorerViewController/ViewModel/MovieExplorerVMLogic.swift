@@ -9,34 +9,78 @@
 import Foundation
 
 protocol IMovieExplorerVMLogic {
-    var genres: [GenreUIModel] { get set }
+    var genres: [GenreUIModel] { get }
     var currentGenreId: Int? { get }
     
     init()
     
-    func getFirstGenreId() -> Int?
+    // Setter
+    mutating func setGenresResponse(_ genresUIModel: [GenreUIModel])
     mutating func setCurrentGenre(genreId: Int)
+    
+    // Getter
+    func getFirstGenreId() -> Int?
+    func getGenreName(for genreId: Int) -> String?
+    func getGenre(before genreId: Int) -> GenreUIModel?
+    func getGenre(after genreId: Int) -> GenreUIModel?
+    
+    // Calculations
     func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry?
 }
 
 struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
     
     // MARK: Properties
-    var genres: [GenreUIModel] = []
+    private(set) var genres: [GenreUIModel] = []
     private(set) var currentGenreId: Int?
     
     // MARK: Initialize
     init() { }
     
-    // MARK: - State Management & Calculations
+}
+
+// MARK: Setter
+internal extension MovieExplorerVMLogic {
     
-    func getFirstGenreId() -> Int? {
-        return genres.first?.id
+    mutating func setGenresResponse(_ genresUIModel: [GenreUIModel]) {
+        self.genres = genresUIModel
     }
     
     mutating func setCurrentGenre(genreId: Int) {
         self.currentGenreId = genreId
     }
+}
+
+// MARK: Getter
+internal extension MovieExplorerVMLogic {
+    
+    func getFirstGenreId() -> Int? {
+        return genres.first?.id
+    }
+    
+    func getGenreName(for genreId: Int) -> String? {
+        return genres.first(where: { $0.id == genreId })?.name
+    }
+    
+    func getGenre(before genreId: Int) -> GenreUIModel? {
+        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }),
+              currentIndex > 0 else {
+            return nil
+        }
+        return genres[currentIndex - 1]
+    }
+    
+    func getGenre(after genreId: Int) -> GenreUIModel? {
+        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }),
+              currentIndex < genres.count - 1 else {
+            return nil
+        }
+        return genres[currentIndex + 1]
+    }
+}
+
+// MARK: Calculations
+internal extension MovieExplorerVMLogic {
     
     func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry? {
         if newResults.results.isEmpty { return nil }

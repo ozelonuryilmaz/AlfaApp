@@ -7,26 +7,26 @@
 //
 
 import UIKit
-import Combine
 
 final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRootView> {
     
     private let viewModel: IMovieExplorerViewModel
     private var genreViewControllers: [Int: GenreMoviesViewController] = [:]
-
+    
     init(viewModel: IMovieExplorerViewModel) {
         self.viewModel = viewModel
         super.init()
     }
     
-    required public init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required public init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func setLayoutStyle() -> (top: EdgeLayoutStyle, leading: EdgeLayoutStyle, bottom: EdgeLayoutStyle, trailing: EdgeLayoutStyle) {
         return (.safeArea, .superview, .superview, .superview)
     }
     
     override func setupView() {
-        self.title = "Keşfet"
         rootView.pageViewController.dataSource = self
         rootView.pageViewController.delegate = self
     }
@@ -36,16 +36,22 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
         listenErrorState()
         viewModel.fetchInitialData()
     }
+}
+
+// MARK: Observable
+private extension MovieExplorerViewController {
     
-    private func observeViewState() {
+    func observeViewState() {
         viewModel.viewState
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] state in self?.handle(state: state) }
+            .sink { [weak self] state in
+                self?.handle(state: state)
+            }
             .store(in: &cancelBag)
     }
     
-    private func handle(state: MovieExplorerViewState) {
+    func handle(state: MovieExplorerViewState) {
         switch state {
         case .initialLoading:
             rootView.showInitialLoading(true)
@@ -59,7 +65,7 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
         }
     }
     
-    private func listenErrorState() {
+    func listenErrorState() {
         viewModel.errorState
             .compactMap { $0 }
             .receive(on: DispatchQueue.main)
@@ -69,15 +75,19 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
             }
             .store(in: &cancelBag)
     }
+}
 
-    private func setupInitialPage() {
-        guard let firstGenre = viewModel.genres.first else { return }
-        let firstVC = viewController(for: firstGenre.id)
+// MARK: InitialPage
+private extension MovieExplorerViewController {
+    
+    func setupInitialPage() {
+        guard let firstGenreId = viewModel.getFirstGenreId() else { return }
+        let firstVC = viewController(for: firstGenreId)
         rootView.setInitialPage(viewController: firstVC)
-        updateNavigationTitle(for: firstGenre.id)
+        updateNavigationTitle(for: firstGenreId)
     }
     
-    private func viewController(for genreId: Int) -> GenreMoviesViewController {
+    func viewController(for genreId: Int) -> GenreMoviesViewController {
         if let existingVC = genreViewControllers[genreId] { return existingVC }
         let newVC = GenreMoviesViewController(genreId: genreId)
         newVC.onRequiresNextPage = { [weak self] in self?.viewModel.loadNextPage() }
@@ -86,30 +96,29 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
     }
 }
 
+// MARK: Navigation
 private extension MovieExplorerViewController {
+    
     func updateNavigationTitle(for genreId: Int) {
-        if let genre = viewModel.genres.first(where: { $0.id == genreId }) {
-            self.title = genre.name
-        }
+        self.title = viewModel.getGenreName(for: genreId)
     }
 }
 
+// MARK: UIPageViewControllerDataSource & UIPageViewControllerDelegate
 extension MovieExplorerViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let currentVC = viewController as? GenreMoviesViewController,
-              let currentIndex = viewModel.genres.firstIndex(where: { $0.id == currentVC.genreId }),
-              currentIndex > 0 else { return nil }
-        return self.viewController(for: viewModel.genres[currentIndex - 1].id)
+              let previousGenre = viewModel.getGenre(before: currentVC.genreId) else { return nil }
+        return self.viewController(for: previousGenre.id)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let currentVC = viewController as? GenreMoviesViewController,
-              let currentIndex = viewModel.genres.firstIndex(where: { $0.id == currentVC.genreId }),
-              currentIndex < viewModel.genres.count - 1 else { return nil }
-        return self.viewController(for: viewModel.genres[currentIndex + 1].id)
+              let nextGenre = viewModel.getGenre(after: currentVC.genreId) else { return nil }
+        return self.viewController(for: nextGenre.id)
     }
-
+    
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         guard completed else { return }
         

@@ -11,7 +11,7 @@ typealias DefaultDismissCallback = (() -> Void)
 
 protocol ICoordinatorParams { }
 
-// MARK: - Coordinator Protocol
+// MARK: Coordinator Protocol
 protocol Coordinator: AnyObject {
     var params: ICoordinatorParams? { get set }
     var willDismissCallback: DefaultDismissCallback? { get set }
@@ -23,7 +23,7 @@ protocol Coordinator: AnyObject {
     func with(data: ICoordinatorParams?) -> Self
 }
 
-// MARK: - RootableCoordinator
+// MARK: RootableCoordinator
 class RootableCoordinator: NSObject, Coordinator {
  
     var params: ICoordinatorParams?
@@ -58,7 +58,7 @@ class RootableCoordinator: NSObject, Coordinator {
     }
 }
 
-// MARK: - BaseCoordinator
+// MARK: BaseCoordinator
 class BaseCoordinator: Coordinator {
     
     var params: ICoordinatorParams?
@@ -69,7 +69,7 @@ class BaseCoordinator: Coordinator {
         print("killed: \(Self.self)")
     }
     
-    // MARK: - Abstract
+    // MARK: Abstract
     func start() {
         fatalError("start() must be overridden in subclass")
     }
@@ -126,7 +126,7 @@ extension BaseCoordinator {
     }
 }
 
-// MARK: - UIViewController Extension
+// MARK: UIViewController Extension
 private extension UIViewController {
 
     func topMostViewController() -> UIViewController {

@@ -17,7 +17,8 @@ enum MovieExplorerBuilder {
         let repository: IMovieExplorerRepository = MovieExplorerRepository(genreUsecase: genreUsecase, discoverUsecase: discoverUsecase)
         
         let vmLogic: IMovieExplorerVMLogic = MovieExplorerVMLogic()
-        let cacheService: IMovieCacheService = MovieCacheService.shared
+
+        let cacheService: IMovieCacheService = MovieCacheService()
         
         let viewModel: IMovieExplorerViewModel = MovieExplorerViewModel(
             repository: repository,

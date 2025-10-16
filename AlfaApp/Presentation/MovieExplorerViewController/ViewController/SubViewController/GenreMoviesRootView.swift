@@ -8,15 +8,6 @@
 import UIKit
 
 final class GenreMoviesRootView: BaseRootView {
-
-    private(set) var collectionView: UICollectionView!
-    
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.translatesAutoresizingMaskIntoConstraints = false
-        indicator.hidesWhenStopped = true
-        return indicator
-    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -25,14 +16,31 @@ final class GenreMoviesRootView: BaseRootView {
         setupUI()
     }
     
-    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     func showLoading(_ isLoading: Bool) {
         if isLoading { activityIndicator.startAnimating() }
         else { activityIndicator.stopAnimating() }
     }
     
-    private func setupUI() {
+    // MARK: Definitions
+    
+    private(set) var collectionView: UICollectionView!
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+}
+
+// MARK: Setup
+private extension GenreMoviesRootView {
+    
+    func setupUI() {
         addSubview(activityIndicator)
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
@@ -40,14 +48,14 @@ final class GenreMoviesRootView: BaseRootView {
         ])
     }
     
-    private func setupCollectionView() {
+    func setupCollectionView() {
         collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .clear
         addSubview(collectionView)
     }
-
-    private func createLayout() -> UICollectionViewLayout {
+    
+    func createLayout() -> UICollectionViewLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(220))
