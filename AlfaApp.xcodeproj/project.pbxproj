@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67170DC82EA13479009ECC3B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 67170DC72EA13479009ECC3B /* Kingfisher */; };
 		673310522E9FABE100554D22 /* AlfaDomain in Frameworks */ = {isa = PBXBuildFile; productRef = 673310512E9FABE100554D22 /* AlfaDomain */; };
 		673310672E9FB08B00554D22 /* AlfaData in Frameworks */ = {isa = PBXBuildFile; productRef = 673310662E9FB08B00554D22 /* AlfaData */; };
 		673310752E9FB1C400554D22 /* AlfaData in Resources */ = {isa = PBXBuildFile; fileRef = 673310742E9FB1C400554D22 /* AlfaData */; };
@@ -83,6 +84,7 @@
 				67C793F52E9E88E700B35AA3 /* FirebaseAppCheck in Frameworks */,
 				67E19B342E9FB2DE00E51E33 /* AlfaPlayerKit in Frameworks */,
 				67C793F32E9E88E700B35AA3 /* FirebaseAnalytics in Frameworks */,
+				67170DC82EA13479009ECC3B /* Kingfisher in Frameworks */,
 				673310522E9FABE100554D22 /* AlfaDomain in Frameworks */,
 				673310672E9FB08B00554D22 /* AlfaData in Frameworks */,
 				67C793FA2E9E893A00B35AA3 /* SecurityKit in Frameworks */,
@@ -164,6 +166,7 @@
 				673310512E9FABE100554D22 /* AlfaDomain */,
 				673310662E9FB08B00554D22 /* AlfaData */,
 				67E19B332E9FB2DE00E51E33 /* AlfaPlayerKit */,
+				67170DC72EA13479009ECC3B /* Kingfisher */,
 			);
 			productName = AlfaApp;
 			productReference = 67FCB95A2E9D4A56005C63B7 /* AlfaApp.app */;
@@ -253,6 +256,7 @@
 				673310502E9FABE100554D22 /* XCLocalSwiftPackageReference "AlfaDomain" */,
 				673310652E9FB08B00554D22 /* XCLocalSwiftPackageReference "AlfaData" */,
 				67E19B322E9FB2DE00E51E33 /* XCLocalSwiftPackageReference "AlfaPlayerKit" */,
+				67170DC62EA13479009ECC3B /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 67FCB95B2E9D4A56005C63B7 /* Products */;
@@ -631,6 +635,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		67170DC62EA13479009ECC3B /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = exactVersion;
+				version = 8.6.0;
+			};
+		};
 		67C793F12E9E88E700B35AA3 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -650,6 +662,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		67170DC72EA13479009ECC3B /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 67170DC62EA13479009ECC3B /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
 		673310512E9FABE100554D22 /* AlfaDomain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AlfaDomain;

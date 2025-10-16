@@ -10,50 +10,45 @@ import UIKit
 
 final class MovieExplorerRootView: BaseRootView {
     
-    // MARK: UI Components
-    private(set) lazy var genreTitleLabel: UILabel = {
-        let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 28)
-        label.textColor = .label
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+    private(set) var pageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
     
-    private(set) lazy var moviesCollectionView: UICollectionView = {
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.backgroundColor = .clear
-        return collectionView
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
     }()
-    
-    // MARK: Init
-    init() {
-        super.init(frame: .zero)
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         backgroundColor = .systemBackground
         setupUI()
     }
     
-    // MARK: UI Setup
-    private func setupUI() {
-        translatesAutoresizingMaskIntoConstraints = false
-        
-        addSubview(genreTitleLabel)
-        addSubview(moviesCollectionView)
-        
-        NSLayoutConstraint.activate([
-            genreTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
-            genreTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            genreTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            
-            moviesCollectionView.topAnchor.constraint(equalTo: genreTitleLabel.bottomAnchor, constant: 16),
-            moviesCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            moviesCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            moviesCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+    
+    func showInitialLoading(_ isLoading: Bool) {
+        if isLoading { activityIndicator.startAnimating() }
+        else { activityIndicator.stopAnimating() }
     }
     
-    func setTitle(_ text: String) {
-        genreTitleLabel.text = text
+    func setInitialPage(viewController: UIViewController) {
+        pageViewController.setViewControllers([viewController], direction: .forward, animated: false, completion: nil)
+    }
+    
+    private func setupUI() {
+        addSubview(pageViewController.view)
+        pageViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            pageViewController.view.topAnchor.constraint(equalTo: self.topAnchor),
+            pageViewController.view.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            pageViewController.view.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            pageViewController.view.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            activityIndicator.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor)
+        ])
     }
 }

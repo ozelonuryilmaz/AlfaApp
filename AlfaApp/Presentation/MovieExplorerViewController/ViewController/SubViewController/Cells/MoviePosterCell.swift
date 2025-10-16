@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class MoviePosterCell: UICollectionViewCell {
     
@@ -47,10 +48,14 @@ final class MoviePosterCell: UICollectionViewCell {
         contentView.addSubview(posterImageView)
         contentView.addSubview(titleLabel)
         
+        titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+        
         NSLayoutConstraint.activate([
             posterImageView.topAnchor.constraint(equalTo: contentView.topAnchor),
             posterImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
             posterImageView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+
+            posterImageView.heightAnchor.constraint(equalTo: posterImageView.widthAnchor, multiplier: 1.5),
             
             titleLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 8),
             titleLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -62,11 +67,18 @@ final class MoviePosterCell: UICollectionViewCell {
     // MARK: - Configuration
     func configure(with movie: DiscoverResultUIModel) {
         titleLabel.text = movie.title
-        // Burada bir Kingfisher, SDWebImage gibi bir kütüphane ile
-        // veya custom bir image loader ile resmi asenkron olarak yükle.
-        // if let url = URL(string: "https://...org/\(movie.poster_path)") {
-        //     posterImageView.kf.setImage(with: url)
-        // }
+        if let url = URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path) {
+            posterImageView.kf.setImage(
+                with: url,
+                placeholder: nil,
+                options: [
+                    .transition(.fade(0.25)), // Resim yüklenince yumuşak bir geçişle görünsün
+                    .cacheOriginalImage      // Orijinal resmi de cache'le
+                ]
+            )
+        } else {
+            posterImageView.image = nil
+        }
     }
     
     override func prepareForReuse() {

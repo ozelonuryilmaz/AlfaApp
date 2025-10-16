@@ -8,35 +8,56 @@
 
 import Foundation
 
-enum SwipeDirection {
-    case next
-    case previous
-}
-
 protocol IMovieExplorerVMLogic {
-    func calculateIndex(for direction: SwipeDirection, currentIndex: Int, totalCount: Int) -> Int?
+    var genres: [GenreUIModel] { get set }
+    var currentGenreId: Int? { get }
+    
+    init()
+    
+    func getFirstGenreId() -> Int?
+    mutating func setCurrentGenre(genreId: Int)
+    func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry?
 }
 
 struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
-
-    func calculateIndex(for direction: SwipeDirection, currentIndex: Int, totalCount: Int) -> Int? {
-        guard totalCount > 0 else { return nil }
+    
+    // MARK: Properties
+    var genres: [GenreUIModel] = []
+    private(set) var currentGenreId: Int?
+    
+    // MARK: Initialize
+    init() { }
+    
+    // MARK: - State Management & Calculations
+    
+    func getFirstGenreId() -> Int? {
+        return genres.first?.id
+    }
+    
+    mutating func setCurrentGenre(genreId: Int) {
+        self.currentGenreId = genreId
+    }
+    
+    func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry? {
+        if newResults.results.isEmpty { return nil }
         
-        var newIndex: Int
-        switch direction {
-        case .next:
-            newIndex = currentIndex + 1
-            // Listenin sonuna ulaştıysa daha ileri gitme
-            if newIndex >= totalCount {
-                return nil
-            }
-        case .previous:
-            newIndex = currentIndex - 1
-            // Listenin başına ulaştıysa daha geri gitme
-            if newIndex < 0 {
-                return nil
-            }
+        let existingMovieIDs = Set(currentEntry.movies.map { $0.id })
+        let uniqueNewMovies = newResults.results.filter { !existingMovieIDs.contains($0.id) }
+        
+        if uniqueNewMovies.isEmpty {
+            print("Pagination Warning: Page \(newResults.page) contained only duplicate movies.")
+            return nil
         }
-        return newIndex
+        
+        var updatedMovies = currentEntry.movies
+        updatedMovies.append(contentsOf: uniqueNewMovies)
+        
+        let updatedEntry = GenreCacheEntry(
+            movies: updatedMovies,
+            currentPage: newResults.page,
+            lastContentOffset: currentEntry.lastContentOffset
+        )
+        
+        return updatedEntry
     }
 }
