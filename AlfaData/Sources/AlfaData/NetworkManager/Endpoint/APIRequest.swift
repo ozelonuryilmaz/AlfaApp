@@ -9,18 +9,22 @@ import Foundation
 
 public enum APIRequest {
     case genres
+    case discover
     
     var path: String {
         switch self {
         case .genres:
             return "/genre/movie/list"
+        case .discover:
+            return "/discover/movie"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .genres:
+        case .genres, .discover:
             return .get
+            
         }
     }
     
@@ -28,15 +32,21 @@ public enum APIRequest {
         switch self {
         case .genres:
             return [URLQueryItem(name: "language", value: "en-US")]
+        case .discover:
+            return [URLQueryItem(name: "sort_by", value: "popularity.desc"),
+                    URLQueryItem(name: "include_adult", value: "false"),
+                    URLQueryItem(name: "include_video", value: "false"),
+                    URLQueryItem(name: "language", value: "en-US")]
         }
     }
 }
 
 extension APIRequest {
     
-    func buildRequest(apiKey: String) throws -> URLRequest {
-        var finalQueryItems = self.queryItems
+    func buildRequest(apiKey: String, extraQueryItems: [URLQueryItem] = []) throws -> URLRequest {
+        var finalQueryItems: [URLQueryItem] = self.queryItems
         finalQueryItems.append(URLQueryItem(name: "api_key", value: apiKey))
+        finalQueryItems.append(contentsOf: extraQueryItems)
         
         return try RequestBuilder.buildRequest(
             baseURL: APIEndpoints.baseURL,

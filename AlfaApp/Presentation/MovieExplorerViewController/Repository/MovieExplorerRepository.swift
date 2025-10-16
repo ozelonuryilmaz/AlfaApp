@@ -12,14 +12,18 @@ import AlfaDomain
 protocol IMovieExplorerRepository: AnyObject {
     
     func fetchGenres() async throws -> GenresUIModel
+    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel
 }
 
 final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
     
     private let genreUsecase: IGenresUseCase
+    private let discoverUsecase: IDiscoverUseCase
     
-    init(genreUsecase: IGenresUseCase) {
+    init(genreUsecase: IGenresUseCase,
+         discoverUsecase: IDiscoverUseCase) {
         self.genreUsecase = genreUsecase
+        self.discoverUsecase = discoverUsecase
     }
     
     func fetchGenres() async throws -> GenresUIModel {
@@ -29,6 +33,19 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
                 return GenreUIModel(id: genreEntity.id, name: genreEntity.name)
             }
             return GenresUIModel(genres: mappedGenres)
+        }
+        catch {
+            throw error
+        }
+    }
+    
+    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel {
+        do {
+            let entity: DiscoverResultsEntity = try await discoverUsecase.execute(genreId: genreId, page: page)
+            let mappedDiscover = entity.results.map { discoverEntity in
+                return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, poster_path: discoverEntity.poster_path)
+            }
+            return DiscoverResultsUIModel(page: entity.page, results: mappedDiscover)
         }
         catch {
             throw error

@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         
         // TODO: App foreground’a geldiğinde veya 5 dakikada bir SecurityKit ile güvenlik kontrolü yap, gerekirse erişimi kısıtla.
-        // TODO: SecurityKit'i ConfidentialKit'den faydalanarak Code Obfuscation yap.
+        // TODO: ConfidentialKit'den faydalanarak Code Obfuscation yap.
         
     }
     

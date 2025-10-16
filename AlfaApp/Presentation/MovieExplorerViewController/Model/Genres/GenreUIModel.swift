@@ -8,7 +8,6 @@
 import Foundation
 
 struct GenreUIModel {
-    
     let id: Int
     let name: String
 }

@@ -51,12 +51,15 @@ internal extension MovieExplorerViewModel {
         Task { @MainActor in
             do {
                 let genres: GenresUIModel = try await repository.fetchGenres()
-                print("Log *** genres: \(genres) *** ")
+                let disocover = try await repository.fetchDiscover(genreId: genres.genres.first?.id ?? 0, page: 1)
+                print("Log *** disocover: \(disocover) *** ")
             } catch {
                 errorState.value = error.localizedDescription
             }
         }
     }
+    
+    
 
 }
 
