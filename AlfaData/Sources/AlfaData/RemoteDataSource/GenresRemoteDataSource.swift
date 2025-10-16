@@ -25,7 +25,7 @@ final public class GenresRemoteDataSource: IGenresRemoteDataSource {
         
         let apiKey: String = try await securityManager.fetchSecureApiKey()
         
-        guard let request = try? APIRequest.genres.buildRequest(apiKey: apiKey) else {
+        guard let request: URLRequest = try? APIRequest.genres.buildRequest(apiKey: apiKey) else {
             throw NetworkError.invalidURL
         }
         

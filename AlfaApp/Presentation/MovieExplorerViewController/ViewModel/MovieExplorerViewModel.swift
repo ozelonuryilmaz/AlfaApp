@@ -50,7 +50,7 @@ internal extension MovieExplorerViewModel {
     func loadGenres() {
         Task { @MainActor in
             do {
-                let genres = try await repository.fetchGenres() // await sonrası default background thread'e geçecek
+                let genres: GenresUIModel = try await repository.fetchGenres()
                 print("Log *** genres: \(genres) *** ")
             } catch {
                 errorState.value = error.localizedDescription

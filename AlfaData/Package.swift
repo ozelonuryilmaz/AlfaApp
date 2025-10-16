@@ -9,7 +9,6 @@ let package = Package(
         .iOS(.v15)
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "AlfaData",
             targets: ["AlfaData"]),
@@ -17,19 +16,24 @@ let package = Package(
     dependencies: [
         .package(path: "../AlfaDomain"),
         .package(url: "https://github.com/firebase/firebase-ios-sdk.git", from: "12.4.0"),
-        .package(url: "https://github.com/FuturraGroup/SecurityKit.git", from: "1.7.0")
+        .package(url: "https://github.com/FuturraGroup/SecurityKit.git", from: "1.7.0"),
+        .package(url: "https://github.com/securevale/swift-confidential.git", .upToNextMinor(from: "0.4.0")),
+        //.package(url: "https://github.com/securevale/swift-confidential-plugin.git", .upToNextMinor(from: "0.4.0"))
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "AlfaData",
             dependencies: [
                 .product(name: "AlfaDomain", package: "AlfaDomain"),
                 .product(name: "FirebaseFunctions", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseAnalytics", package: "firebase-ios-sdk"),
-                .product(name: "SecurityKit", package: "SecurityKit")
-            ]
+                .product(name: "SecurityKit", package: "SecurityKit"),
+                .product(name: "ConfidentialKit", package: "swift-confidential")
+            ],
+            //exclude: ["confidential.yml"],
+            //plugins: [
+            //    .plugin(name: "Confidential", package: "swift-confidential-plugin")
+            //]
         ),
         .testTarget(
             name: "AlfaDataTests",

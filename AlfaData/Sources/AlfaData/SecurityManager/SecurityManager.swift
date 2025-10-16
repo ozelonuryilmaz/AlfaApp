@@ -9,9 +9,17 @@ import Foundation
 import FirebaseFunctions
 import FirebaseAnalytics
 import SecurityKit
+// import ConfidentialKit
+
+
+// TODO: SecurityManager düzenlenmeler yapılmalı
+// TODO: Jailbreak, ReverseEngineer,... tespitinde kısıtlama getir.
+// TODO: ConfidentialKit kullanarak Code Obfuscation uygula
+
 
 public protocol ISecurityManager {
     func fetchSecureApiKey() async throws -> String
+    func fetchSecureVideoUrl() async throws -> URL
 }
 
 final public class SecurityManager: ISecurityManager {
@@ -21,15 +29,35 @@ final public class SecurityManager: ISecurityManager {
     public init () {
         self.functions = Functions.functions(region: "europe-west1")
     }
+    
+    private static func logSecurityBreach(type: String) {
+        Analytics.logEvent("security_breach", parameters: ["breach_type": type])
+    }
+}
+
+
+// MARK: ISecurityManager
+public extension SecurityManager {
 
     @MainActor
-    public func fetchSecureApiKey() async throws -> String {
+    func fetchSecureApiKey() async throws -> String {
         try performEnvironmentChecks()
         return try await SecurityManager.fetchApiKeyFromCloud(functions: self.functions)
     }
     
     @MainActor
-    private func performEnvironmentChecks() throws {
+    func fetchSecureVideoUrl() async throws -> URL {
+        try performEnvironmentChecks()
+        return try await SecurityManager.fetchUrlFromCloud(functions: self.functions)
+    }
+}
+
+
+// MARK: Security Checks
+private extension SecurityManager {
+    
+    @MainActor
+    func performEnvironmentChecks() throws {
         if SecurityKit.isJailBroken() {
             SecurityManager.logSecurityBreach(type: "jailbreak_detected")
             throw SecurityError.deviceIsJailbroken
@@ -41,25 +69,55 @@ final public class SecurityManager: ISecurityManager {
         }
         #endif
     }
+}
+
+
+// MARK: Fetch Key From Cloud
+private extension SecurityManager {
     
-    private static func fetchApiKeyFromCloud(functions: Functions) async throws -> String {
+    static func fetchApiKeyFromCloud(functions: Functions) async throws -> String {
+        return try await fetchFromCloud(
+            functions: functions,
+            functionName: "getApiKey",
+            resultKey: "apiKey",
+            transform: { $0 as? String }
+        )
+    }
+    
+    static func fetchUrlFromCloud(functions: Functions) async throws -> URL {
+        return try await fetchFromCloud(
+            functions: functions,
+            functionName: "getSecureVideoUrl",
+            resultKey: "secureUrl",
+            transform: { str in
+                if let str = str as? String { return URL(string: str) }
+                return nil
+            }
+        )
+    }
+    
+    static func fetchFromCloud<T>(
+        functions: Functions,
+        functionName: String,
+        resultKey: String,
+        transform: (Any) -> T?
+    ) async throws -> T {
         do {
-            let result = try await functions.httpsCallable("getApiKey").call()
-            guard let apiKey = (result.data as? [String: Any])?["apiKey"] as? String else {
+            let result = try await functions.httpsCallable(functionName).call()
+            guard let data = result.data as? [String: Any],
+                  let value = transform(data[resultKey] ?? NSNull()) else {
                 throw SecurityError.invalidResponse
             }
-            return apiKey
-        } catch let error {
-            SecurityManager.logSecurityBreach(type: "api_key_function_call_error")
+            return value
+        } catch {
+            SecurityManager.logSecurityBreach(type: "\(functionName)_function_call_error")
             throw SecurityError.requestFailed(error.localizedDescription)
         }
     }
-    
-    private static func logSecurityBreach(type: String) {
-        Analytics.logEvent("security_breach", parameters: ["breach_type": type])
-    }
 }
 
+
+// MARK: SecurityError
 enum SecurityError: LocalizedError {
     case deviceIsJailbroken
     case debuggerIsAttached

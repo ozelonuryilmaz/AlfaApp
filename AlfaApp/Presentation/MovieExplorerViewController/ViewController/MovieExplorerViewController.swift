@@ -7,9 +7,6 @@
 //
 
 import UIKit
-import AlfaDomain
-import AlfaData
-import AlfaPlayerKit
 
 final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRootView> {
     
