@@ -45,7 +45,7 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
             let mappedDiscover = entity.results.map { discoverEntity in
                 return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, poster_path: discoverEntity.poster_path)
             }
-            return DiscoverResultsUIModel(page: entity.page, results: mappedDiscover)
+            return DiscoverResultsUIModel(page: entity.page, results: mappedDiscover, total_pages: entity.total_pages, total_results: entity.total_results)
         }
         catch {
             throw error

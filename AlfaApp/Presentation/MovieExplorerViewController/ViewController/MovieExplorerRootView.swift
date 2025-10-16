@@ -8,78 +8,52 @@
 
 import UIKit
 
-// MARK: View Interface
-protocol MovieExplorerRootViewDelegate: AnyObject {
-    
-    //func favoriteViewDidTapCapture()
-}
-
-// MARK: View Implementation
 final class MovieExplorerRootView: BaseRootView {
     
-    weak var delegate: MovieExplorerRootViewDelegate?
-    
-    // MARK: Init
-    init() {
-        super.init(frame: .zero)
-        backgroundColor = .white
-        setupUI()
-    }
-    
-    // MARK: Definitions
-    private lazy var titleLabel: UILabel = {
+    // MARK: UI Components
+    private(set) lazy var genreTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = .boldSystemFont(ofSize: 20)
+        label.font = .boldSystemFont(ofSize: 28)
         label.textColor = .label
         label.textAlignment = .center
-        label.text = "Başlık"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private lazy var actionButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Devam", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.addTarget(self, action: #selector(favoriteViewDidTapCapture), for: .touchUpInside)
-        return button
+    private(set) lazy var moviesCollectionView: UICollectionView = {
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewLayout())
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .clear
+        return collectionView
     }()
-}
-
-// MARK: Setup
-private extension MovieExplorerRootView {
     
-    func setupUI() {
+    // MARK: Init
+    init() {
+        super.init(frame: .zero)
+        backgroundColor = .systemBackground
+        setupUI()
+    }
+    
+    // MARK: UI Setup
+    private func setupUI() {
         translatesAutoresizingMaskIntoConstraints = false
         
-        addSubview(titleLabel)
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 60),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20)
-        ])
+        addSubview(genreTitleLabel)
+        addSubview(moviesCollectionView)
         
-        addSubview(actionButton)
         NSLayoutConstraint.activate([
-            actionButton.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 24),
-            actionButton.centerXAnchor.constraint(equalTo: centerXAnchor)
+            genreTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 16),
+            genreTitleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
+            genreTitleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
+            
+            moviesCollectionView.topAnchor.constraint(equalTo: genreTitleLabel.bottomAnchor, constant: 16),
+            moviesCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            moviesCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            moviesCollectionView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
-}
-
-// MARK:  Button Tapped
-@objc private extension MovieExplorerRootView {
-    
-    func favoriteViewDidTapCapture() {
-        //delegate?.favoriteViewDidTapCapture()
-    }
-}
-
-
-// MARK: IMovieExplorerRootView
-extension MovieExplorerRootView {
     
     func setTitle(_ text: String) {
-        titleLabel.text = text
+        genreTitleLabel.text = text
     }
 }

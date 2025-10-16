@@ -11,4 +11,6 @@ public struct DiscoverResultsDTO: Decodable {
     
     let page: Int
     let results: [DiscoverResultDTO]
+    let total_pages: Int
+    let total_results: Int
 }

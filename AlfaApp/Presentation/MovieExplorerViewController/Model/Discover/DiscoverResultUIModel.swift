@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DiscoverResultUIModel {
+struct DiscoverResultUIModel: Hashable {
     let id: Int
     let title: String
     let poster_path: String

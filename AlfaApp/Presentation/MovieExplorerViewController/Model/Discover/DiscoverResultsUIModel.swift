@@ -10,4 +10,6 @@ import Foundation
 struct DiscoverResultsUIModel {
     let page: Int
     let results: [DiscoverResultUIModel]
+    let total_pages: Int
+    let total_results: Int
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GenreUIModel {
+struct GenreUIModel: Hashable {
     let id: Int
     let name: String
 }

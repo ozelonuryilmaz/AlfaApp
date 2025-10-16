@@ -8,23 +8,35 @@
 
 import Foundation
 
+enum SwipeDirection {
+    case next
+    case previous
+}
+
 protocol IMovieExplorerVMLogic {
-    
-    init()
-    
+    func calculateIndex(for direction: SwipeDirection, currentIndex: Int, totalCount: Int) -> Int?
 }
 
 struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
-    
-    // MARK: Definitions
-    
-    // MARK: Initialize
-    init() { }
-    
-    // MARK: Props
-}
 
-// MARK: Props
-extension MovieExplorerVMLogic {
-    
+    func calculateIndex(for direction: SwipeDirection, currentIndex: Int, totalCount: Int) -> Int? {
+        guard totalCount > 0 else { return nil }
+        
+        var newIndex: Int
+        switch direction {
+        case .next:
+            newIndex = currentIndex + 1
+            // Listenin sonuna ulaştıysa daha ileri gitme
+            if newIndex >= totalCount {
+                return nil
+            }
+        case .previous:
+            newIndex = currentIndex - 1
+            // Listenin başına ulaştıysa daha geri gitme
+            if newIndex < 0 {
+                return nil
+            }
+        }
+        return newIndex
+    }
 }
