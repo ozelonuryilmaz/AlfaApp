@@ -12,12 +12,12 @@ import Combine
 /// A view that handles the AVPlayerLayer and basic player setup.
 public final class AlfaPlayerView: UIView {
     
-    // MARK: - Observers
+    // MARK: Observers
     public private(set) lazy var timeObserver = AlfaPlayerTimeObserver(player)
     public private(set) lazy var itemStatusObserver = AlfaPlayerItemStatusObserver()
     public private(set) lazy var itemFailToPlayToEndObserver = AlfaPlayerItemFailToPlayToEndObserver()
     
-    // MARK: - AVPlayer Properties
+    // MARK: AVPlayer Properties
     public override class var layerClass: AnyClass {
         return AVPlayerLayer.self
     }
@@ -54,7 +54,6 @@ public final class AlfaPlayerView: UIView {
         }
     }
     
-    // MARK: - Initialization
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -70,7 +69,7 @@ public final class AlfaPlayerView: UIView {
         playerLayer.videoGravity = .resizeAspect
     }
     
-    // MARK: - Public Methods
+    // MARK: Public Methods
     @discardableResult
     public func setVideo(with url: URL) -> Bool {
         self.playerItem = AVPlayerItem(url: url)

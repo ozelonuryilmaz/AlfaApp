@@ -41,8 +41,6 @@ final class GenreMoviesRootView: BaseRootView {
 // MARK: SetupUI
 private extension GenreMoviesRootView {
     
-    // TODO: landscape'de tasarım yanlış gözüküyor
-    
     func setupUI() {
         addSubview(activityIndicator)
         NSLayoutConstraint.activate([
@@ -55,13 +53,14 @@ private extension GenreMoviesRootView {
         collectionView = UICollectionView(frame: self.bounds, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.backgroundColor = .clear
+        collectionView.register(MoviePosterCell.self, forCellWithReuseIdentifier: MoviePosterCell.reuseIdentifier)
         addSubview(collectionView)
     }
     
     func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1.0))
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(220))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(220))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(220))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
         group.interItemSpacing = .fixed(10)
         let section = NSCollectionLayoutSection(group: group)
