@@ -22,6 +22,9 @@ protocol IMovieExplorerViewModel: AnyObject {
     func loadMovies(for genreId: Int)
     func loadNextPage()
     
+    // Coordinator
+    func movieTapped(movie: DiscoverResultUIModel)
+    
     // Genres
     func setCurrentGenre(genreId: Int)
     func getGenreName(for genreId: Int) -> String?
@@ -62,11 +65,11 @@ internal extension MovieExplorerViewModel {
         Task { @MainActor in
             do {
                 let genresData = try await repository.fetchGenres()
-                self.vmLogic.setGenresResponse(genresData.genres)
+                vmLogic.setGenresResponse(genresData.genres)
                 viewState.value = .genresLoaded
                 
-                if let firstGenreId = self.vmLogic.getFirstGenreId() {
-                    self.setCurrentGenre(genreId: firstGenreId)
+                if let firstGenreId = vmLogic.getFirstGenreId() {
+                    setCurrentGenre(genreId: firstGenreId)
                     loadMovies(for: firstGenreId)
                 }
             } catch {
@@ -95,7 +98,7 @@ internal extension MovieExplorerViewModel {
     }
     
     func loadNextPage() {
-        guard let genreId = self.vmLogic.currentGenreId,
+        guard let genreId = vmLogic.currentGenreId,
               let currentEntry = cacheService.getEntry(for: genreId) else { return }
         let nextPage = currentEntry.currentPage + 1
         
@@ -103,17 +106,22 @@ internal extension MovieExplorerViewModel {
             do {
                 let discoverResults = try await repository.fetchDiscover(genreId: genreId, page: nextPage)
                 
-                guard let newEntry = vmLogic.processNextPage(currentEntry: currentEntry, newResults: discoverResults) else {
-                    return
-                }
+                guard let newEntry = vmLogic.processNextPage(currentEntry: currentEntry, newResults: discoverResults) else { return }
                 
                 cacheService.cache(entry: newEntry, for: genreId)
                 viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: newEntry.lastContentOffset, isPagination: true)
-                
             } catch {
                 print("Failed to load next page: \(error.localizedDescription)")
             }
         }
+    }
+}
+
+// MARK: Coordinator
+internal extension MovieExplorerViewModel {
+    
+    func movieTapped(movie: DiscoverResultUIModel) {
+        coordinator.presentToMoviePlayerVC(with: movie)
     }
 }
 

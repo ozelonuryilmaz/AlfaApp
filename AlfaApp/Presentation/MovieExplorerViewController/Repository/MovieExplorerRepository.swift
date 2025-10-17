@@ -43,7 +43,7 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
         do {
             let entity: DiscoverResultsEntity = try await discoverUsecase.execute(genreId: genreId, page: page)
             let mappedDiscover = entity.results.map { discoverEntity in
-                return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, poster_path: discoverEntity.poster_path)
+                return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, posterURL: discoverEntity.posterURL)
             }
             return DiscoverResultsUIModel(page: entity.page, results: mappedDiscover, total_pages: entity.total_pages, total_results: entity.total_results)
         }

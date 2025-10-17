@@ -10,5 +10,5 @@ import Foundation
 struct DiscoverResultUIModel: Hashable {
     let id: Int
     let title: String
-    let poster_path: String
+    let posterURL: URL?
 }

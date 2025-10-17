@@ -91,6 +91,7 @@ private extension MovieExplorerViewController {
         if let existingVC = genreViewControllers[genreId] { return existingVC }
         let newVC = GenreMoviesViewController(genreId: genreId)
         newVC.onRequiresNextPage = { [weak self] in self?.viewModel.loadNextPage() }
+        newVC.onMovieTapped = { [weak self] movie in self?.viewModel.movieTapped(movie: movie) }
         genreViewControllers[genreId] = newVC
         return newVC
     }

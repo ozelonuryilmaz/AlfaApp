@@ -10,4 +10,5 @@ import Foundation
 struct APIEndpoints {
     
     static let baseURL = "https://api.themoviedb.org/3"
+    static let posterBaseURL = "https://image.tmdb.org/t/p/w185"
 }

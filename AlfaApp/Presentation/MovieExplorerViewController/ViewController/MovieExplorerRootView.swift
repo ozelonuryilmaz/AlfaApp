@@ -31,6 +31,7 @@ final class MovieExplorerRootView: BaseRootView {
     
     // MARK: Definitions
     
+    // TODO: private(set) yerine private kullan
     private(set) var pageViewController = UIPageViewController(
         transitionStyle: .scroll,
         navigationOrientation: .horizontal,

@@ -40,6 +40,8 @@ final class GenreMoviesRootView: BaseRootView {
 // MARK: Setup
 private extension GenreMoviesRootView {
     
+    // TODO: landscape'de tasarım yanlış gözüküyor
+    
     func setupUI() {
         addSubview(activityIndicator)
         NSLayoutConstraint.activate([

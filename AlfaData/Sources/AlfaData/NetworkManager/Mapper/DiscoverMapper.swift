@@ -18,6 +18,7 @@ public struct DiscoverMapper {
     }
     
     private func map(dto: DiscoverResultDTO) -> DiscoverResultEntity {
-        return DiscoverResultEntity(id: dto.id, title: dto.title, poster_path: dto.poster_path)
+        let posterURL = URL(string: APIEndpoints.posterBaseURL + dto.poster_path)
+        return DiscoverResultEntity(id: dto.id, title: dto.title, posterURL: posterURL)
     }
 }

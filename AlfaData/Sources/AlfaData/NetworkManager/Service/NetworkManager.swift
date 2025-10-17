@@ -19,6 +19,8 @@ public final class NetworkManager: INetworkManager{
         self.urlSession = urlSession
     }
     
+    // TODO: Timeout,.. kurgulanmalı.
+    
     public func request<T>(endpoint: URLRequest) async throws -> T where T : Decodable {
         let (data, response) = try await urlSession.data(for: endpoint)
         

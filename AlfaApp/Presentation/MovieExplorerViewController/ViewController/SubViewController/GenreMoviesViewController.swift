@@ -11,6 +11,7 @@ final class GenreMoviesViewController: AlfaBaseViewController<GenreMoviesRootVie
     
     let genreId: Int
     var onRequiresNextPage: (() -> Void)?
+    var onMovieTapped: ((_ movie: DiscoverResultUIModel) -> Void)?
     var currentContentOffset: CGPoint { rootView.collectionView.contentOffset }
     
     private var movies: [DiscoverResultUIModel] = []
@@ -82,5 +83,11 @@ extension GenreMoviesViewController: UICollectionViewDelegate {
             isLoadingNextPage = true
             onRequiresNextPage?()
         }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let tappedMovieId: Int = dataSource.itemIdentifier(for: indexPath) else { return }
+        guard let tappedMovie: DiscoverResultUIModel = self.movies.first(where: { $0.id == tappedMovieId }) else { return }
+        onMovieTapped?(tappedMovie)
     }
 }

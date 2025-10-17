@@ -30,16 +30,9 @@ final class MoviePosterCell: UICollectionViewCell {
     
     func configure(with movie: DiscoverResultUIModel) {
         titleLabel.text = movie.title
-        // TODO: resim BaseUrl burada olmamalı. Refactore yapılacak
-        if let url = URL(string: "https://image.tmdb.org/t/p/w185" + movie.poster_path) {
-            posterImageView.kf.setImage(
-                with: url,
-                placeholder: nil,
-                options: [
-                    .transition(.fade(0.25))//, // Resim yüklenince yumuşak bir geçişle görünsün
-                    //.cacheOriginalImage // Orijinal resmi de cache'le
-                ]
-            )
+        if let url = movie.posterURL {
+            posterImageView.kf.setImage(with: url, placeholder: nil, options: [.transition(.fade(0.25))])
+            // .fade ile resim yüklenince yumuşak bir geçişle görünsün. '.cacheOriginalImage' ile orjinal resim de cache'lenebilir.
         } else {
             posterImageView.image = nil
         }

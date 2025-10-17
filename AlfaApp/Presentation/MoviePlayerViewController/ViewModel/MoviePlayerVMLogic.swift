@@ -1,0 +1,39 @@
+//
+//  MoviePlayerVMLogic.swift
+//  AlfaApp
+//
+//  Created by Onur Yilmaz on 17.10.2025.
+//  Copyright (c) 2025 AlfaApp IOS Development Team. All rights reserved.
+//
+
+import Foundation
+
+protocol IMoviePlayerVMLogic {
+    var videoTitle: String { get }
+    
+    init(params: MoviePlayerParams)
+    
+    func formatTime(from seconds: Double) -> String
+}
+
+struct MoviePlayerVMLogic: IMoviePlayerVMLogic {
+    
+    // MARK: Properties
+    let videoTitle: String
+    
+    // MARK: - Initialization
+    init(params: MoviePlayerParams) {
+        self.videoTitle = params.movie.title
+    }
+    
+    // MARK: Public Methods
+    
+    /// Formats seconds into a MM:SS string.
+    func formatTime(from seconds: Double) -> String {
+        let value = Int(seconds.rounded())
+        guard !seconds.isNaN, value >= 0 else { return "00:00" }
+        let minutes = value / 60
+        let secondsValue = value % 60
+        return String(format: "%02d:%02d", minutes, secondsValue)
+    }
+}

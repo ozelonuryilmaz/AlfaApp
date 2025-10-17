@@ -7,6 +7,10 @@
 
 import Foundation
 
+
+// TODO: CacheService için Repository,.. kurgulanmalı
+
+
 protocol IMovieCacheService: AnyObject {
     func cache(entry: GenreCacheEntry, for genreId: Int)
     func getEntry(for genreId: Int) -> GenreCacheEntry?

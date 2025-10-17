@@ -98,21 +98,13 @@ class BaseCoordinator: Coordinator {
     }
     
     func topViewController() -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIApplication.shared
-                .connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
-                .first(where: { $0.isKeyWindow })?
-                .rootViewController?
-                .topMostViewController()
-        } else {
-            return UIApplication.shared
-                .windows
-                .first(where: { $0.isKeyWindow })?
-                .rootViewController?
-                .topMostViewController()
-        }
+        return UIApplication.shared
+            .connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first(where: { $0.isKeyWindow })?
+            .rootViewController?
+            .topMostViewController()
     }
 }
 
