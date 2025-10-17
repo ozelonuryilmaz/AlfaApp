@@ -37,7 +37,8 @@ final class GenreMoviesRootView: BaseRootView {
     }()
 }
 
-// MARK: Setup
+
+// MARK: SetupUI
 private extension GenreMoviesRootView {
     
     // TODO: landscape'de tasarım yanlış gözüküyor

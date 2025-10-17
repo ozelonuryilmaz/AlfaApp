@@ -9,9 +9,8 @@
 import UIKit
 import AlfaPlayerKit
 
-/// RootView'dan dışarıya (ViewController'a) bildirilecek kullanıcı etkileşimlerini tanımlar.
-/// ControlsView'dan gelen eylemleri doğrudan yukarıya iletir.
 protocol MoviePlayerRootViewDelegate: AnyObject {
+    
     func rootViewDidTogglePlayback(isPlaying: Bool)
     func rootViewDidTapSkip(seconds: Double)
     func rootViewDidBeginSeeking()
@@ -22,20 +21,9 @@ protocol MoviePlayerRootViewDelegate: AnyObject {
 
 final class MoviePlayerRootView: BaseRootView {
     
-    // MARK: Properties
     weak var delegate: MoviePlayerRootViewDelegate?
     private var controlsHideTimer: Timer?
     private var isSeeking = false
-    
-    // MARK: UI Components
-    let playerView = AlfaPlayerView()
-    private let controlsView = MoviePlayerControlsView()
-    private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .white
-        indicator.hidesWhenStopped = true
-        return indicator
-    }()
     
     // MARK: Initialization
     init() {
@@ -45,37 +33,22 @@ final class MoviePlayerRootView: BaseRootView {
         setupInteractions()
     }
     
-    // MARK: Public Configuration Methods
-    func configurePlayer(with url: URL, title: String) {
-        playerView.setVideo(with: url)
-        controlsView.setTitle(title)
-    }
+    // MARK: Definitions
+    let playerView = AlfaPlayerView()
+    private let controlsView = MoviePlayerControlsView()
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.color = .white
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+}
+
+
+// MARK: SetupUI
+private extension MoviePlayerRootView {
     
-    func showLoading(_ isLoading: Bool) {
-        if isLoading {
-            activityIndicator.startAnimating()
-        } else {
-            activityIndicator.stopAnimating()
-        }
-    }
-    
-    func setPlayback(isPlaying: Bool) {
-        controlsView.setPlaying(isPlaying)
-    }
-    
-    func updateProgress(progress: Float, currentTime: String) {
-        // Daha akıcı kullanıcı deneyim için kullanıcı slider'ı sürüklerken, zamanlayıcıdan gelen güncellemeyi engelle
-        if !isSeeking {
-            controlsView.updateProgress(progress, currentTime: currentTime)
-        }
-    }
-    
-    func setTotalDuration(_ duration: String) {
-        controlsView.setDuration(duration)
-    }
-    
-    // MARK: UI Setup
-    private func setupUI() {
+    func setupUI() {
         [playerView, controlsView, activityIndicator].forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             addSubview($0)
@@ -99,40 +72,64 @@ final class MoviePlayerRootView: BaseRootView {
             activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
+}
+
+
+// MARK: Configuration
+extension MoviePlayerRootView {
     
-    // MARK: Interaction Logic
-    private func setupInteractions() {
+    func configurePlayer(with url: URL, title: String) {
+        playerView.setVideo(with: url)
+        controlsView.setTitle(title)
+    }
+
+    func showLoading(_ isLoading: Bool) {
+        isLoading ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    }
+
+    func setPlayback(isPlaying: Bool) {
+        controlsView.setPlaying(isPlaying)
+    }
+
+    func updateProgress(progress: Float, currentTime: String) {
+        if !isSeeking {
+            controlsView.updateProgress(progress, currentTime: currentTime)
+        }
+    }
+
+    func setTotalDuration(_ duration: String) {
+        controlsView.setDuration(duration)
+    }
+}
+
+
+// MARK: Interaction Logic
+private extension MoviePlayerRootView {
+    
+    func setupInteractions() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         addGestureRecognizer(tapGesture)
-        
         controlsView.delegate = self
-        
-        // Başlangıçta kontrolleri göster ve zamanlayıcıyı başlat.
         showControls(true, animated: false)
     }
-    
-    /// Ekrana dokunulduğunda kontrollerin görünürlüğünü değiştirir.
-    @objc private func handleTap() {
+
+    @objc func handleTap() {
         showControls(controlsView.alpha == 0)
     }
-    
-    /// Kontrolleri gösterir veya gizler.
-    private func showControls(_ shouldShow: Bool, animated: Bool = true) {
-        // Gösterilecekse, otomatik gizleme zamanlayıcısını sıfırla.
+
+    func showControls(_ shouldShow: Bool, animated: Bool = true) {
         if shouldShow {
             resetControlsTimer()
         } else {
-            // Gizlenecekse, zamanlayıcıyı iptal et.
             controlsHideTimer?.invalidate()
         }
-        
+
         UIView.animate(withDuration: animated ? 0.3 : 0.0) {
             self.controlsView.alpha = shouldShow ? 1.0 : 0.0
         }
     }
-    
-    /// Kontrolleri 5 saniye sonra otomatik gizlemek için zamanlayıcıyı başlatır/sıfırlar.
-    private func resetControlsTimer() {
+
+    func resetControlsTimer() {
         controlsHideTimer?.invalidate()
         controlsHideTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false) { [weak self] _ in
             self?.showControls(false)
@@ -140,12 +137,10 @@ final class MoviePlayerRootView: BaseRootView {
     }
 }
 
-// MARK: MoviePlayerControlsViewDelegate Conformance
+
+// MARK: MoviePlayerControlsViewDelegate
 extension MoviePlayerRootView: MoviePlayerControlsViewDelegate {
-    
-    // ControlsView'dan gelen tüm eylemleri doğrudan kendi delegesine (ViewController'a) iletir.
-    // Ayrıca zamanlayıcıyı ve isSeeking durumunu yönetir.
-    
+
     func controlsViewDidTogglePlayback(isPlaying: Bool) {
         delegate?.rootViewDidTogglePlayback(isPlaying: isPlaying)
         resetControlsTimer()

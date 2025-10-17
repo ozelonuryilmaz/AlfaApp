@@ -14,7 +14,7 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
     private let viewModel: IMoviePlayerViewModel
     private var playerObservers: Set<AnyCancellable> = []
     private var wasPlayingBeforeSeek = false
-
+    
     init(viewModel: IMoviePlayerViewModel,
          didDismissCallback: DefaultDismissCallback? = nil) {
         self.viewModel = viewModel
@@ -32,9 +32,9 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupUI()
+        rootView.delegate = self
         observeViewModel()
-        viewModel.viewDidLoad()
+        viewModel.fetchVideoURL()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -51,19 +51,23 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
     // Immersive experience için status bar ve home indicator'ı gizle.
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     override var prefersStatusBarHidden: Bool { true }
+}
+
+
+// MARK: ViewModel State Handling
+private extension MoviePlayerViewController {
     
-    private func setupUI() {
-        rootView.delegate = self
-    }
-    
-    private func observeViewModel() {
-        viewModel.viewState.compactMap { $0 }.receive(on: DispatchQueue.main)
-            .sink { [weak self] state in self?.handle(state: state) }
+    func observeViewModel() {
+        viewModel.viewState
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] state in
+                self?.handle(state: state)
+            }
             .store(in: &cancelBag)
     }
     
-    /// ViewModel'den gelen komutları AVPlayer'a tercüme eden merkezi metot.
-    private func handle(state: MoviePlayerViewState) {
+    func handle(state: MoviePlayerViewState) {
         switch state {
         case .loading(let isLoading):
             rootView.showLoading(isLoading)
@@ -83,14 +87,19 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
             rootView.setTotalDuration(text)
         }
     }
+}
+
+
+// MARK: AVPlayer Observers
+private extension MoviePlayerViewController {
     
-    /// AVPlayer'dan gelen olayları dinleyip ViewModel'e bildiren metot.
-    private func setupPlayerObservers() {
+    func setupPlayerObservers() {
         let player = rootView.playerView.player
         let playerItem = player.currentItem
         
-        // Combine ile Status Observer
-        playerItem?.publisher(for: \.status).receive(on: DispatchQueue.main)
+        // Status Observer
+        playerItem?.publisher(for: \.status)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
                 switch status {
                 case .readyToPlay:
@@ -99,17 +108,24 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
                     self?.viewModel.playerDidFail()
                 default: break
                 }
-            }.store(in: &playerObservers)
-
-        // Combine ile Time Control Observer (Play/Pause/Waiting)
-        player.publisher(for: \.timeControlStatus).receive(on: DispatchQueue.main)
+            }
+            .store(in: &playerObservers)
+        
+        // Time Control Observer (Play/Pause/Waiting)
+        player.publisher(for: \.timeControlStatus)
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
                 let isPlaying = status == .playing
                 self?.rootView.showLoading(status == .waitingToPlayAtSpecifiedRate)
                 self?.rootView.setPlayback(isPlaying: isPlaying)
-                if isPlaying { AVAudioSession.sharedInstance().activatePlaybackSession() } else { AVAudioSession.sharedInstance().deactivatePlaybackSession() }
-            }.store(in: &playerObservers)
-
+                if isPlaying {
+                    AVAudioSession.sharedInstance().activatePlaybackSession()
+                } else {
+                    AVAudioSession.sharedInstance().deactivatePlaybackSession()
+                }
+            }
+            .store(in: &playerObservers)
+        
         // Periyodik Zaman Observer
         rootView.playerView.timeObserver.onTimeChange = { [weak self] seconds in
             self?.viewModel.timeProgressed(to: seconds)
@@ -117,14 +133,32 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
     }
 }
 
-// UI etkileşimlerini ViewModel'e yönlendiren delege metodları.
+
+// MARK: MoviePlayerRootViewDelegate
 extension MoviePlayerViewController: MoviePlayerRootViewDelegate {
+    
     func rootViewDidTogglePlayback(isPlaying: Bool) {
-        if isPlaying { viewModel.playButtonTapped() } else { viewModel.pauseButtonTapped() }
+        isPlaying ? viewModel.playButtonTapped() : viewModel.pauseButtonTapped()
     }
-    func rootViewDidTapSkip(seconds: Double) { viewModel.skip(by: seconds) }
-    func rootViewDidBeginSeeking() { wasPlayingBeforeSeek = rootView.playerView.player.rate > 0; viewModel.beginSeeking() }
-    func rootViewDidSeek(toProgress progress: Float) { viewModel.seek(toProgress: progress) }
-    func rootViewDidEndSeeking() { viewModel.endSeeking(wasPlaying: wasPlayingBeforeSeek) }
-    func rootViewDidTapClose() { viewModel.closeButtonTapped() }
+    
+    func rootViewDidTapSkip(seconds: Double) {
+        viewModel.skip(by: seconds)
+    }
+    
+    func rootViewDidBeginSeeking() {
+        wasPlayingBeforeSeek = rootView.playerView.player.rate > 0
+        viewModel.beginSeeking()
+    }
+    
+    func rootViewDidSeek(toProgress progress: Float) {
+        viewModel.seek(toProgress: progress)
+    }
+    
+    func rootViewDidEndSeeking() {
+        viewModel.endSeeking(wasPlaying: wasPlayingBeforeSeek)
+    }
+    
+    func rootViewDidTapClose() {
+        viewModel.closeButtonTapped()
+    }
 }

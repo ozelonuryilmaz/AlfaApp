@@ -57,6 +57,7 @@ final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
     }
 }
 
+
 // MARK: Services
 internal extension MovieExplorerViewModel {
     
@@ -117,6 +118,7 @@ internal extension MovieExplorerViewModel {
     }
 }
 
+
 // MARK: Coordinator
 internal extension MovieExplorerViewModel {
     
@@ -124,6 +126,7 @@ internal extension MovieExplorerViewModel {
         coordinator.presentToMoviePlayerVC(with: movie)
     }
 }
+
 
 // MARK: Genres
 internal extension MovieExplorerViewModel {
@@ -149,6 +152,7 @@ internal extension MovieExplorerViewModel {
     }
 }
 
+
 // MARK: Cache
 internal extension MovieExplorerViewModel {
     
@@ -156,6 +160,7 @@ internal extension MovieExplorerViewModel {
         cacheService.updateContentOffset(offset, for: genreId)
     }
 }
+
 
 enum MovieExplorerViewState {
     case initialLoading

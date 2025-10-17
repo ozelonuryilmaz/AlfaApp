@@ -38,6 +38,7 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
     }
 }
 
+
 // MARK: Observable
 private extension MovieExplorerViewController {
     
@@ -77,6 +78,7 @@ private extension MovieExplorerViewController {
     }
 }
 
+
 // MARK: InitialPage
 private extension MovieExplorerViewController {
     
@@ -97,6 +99,7 @@ private extension MovieExplorerViewController {
     }
 }
 
+
 // MARK: Navigation
 private extension MovieExplorerViewController {
     
@@ -104,6 +107,7 @@ private extension MovieExplorerViewController {
         self.title = viewModel.getGenreName(for: genreId)
     }
 }
+
 
 // MARK: UIPageViewControllerDataSource & UIPageViewControllerDelegate
 extension MovieExplorerViewController: UIPageViewControllerDataSource, UIPageViewControllerDelegate {

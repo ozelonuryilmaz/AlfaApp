@@ -12,14 +12,27 @@ protocol IMoviePlayerViewModel: AnyObject {
     var viewState: ScreenStateSubject<MoviePlayerViewState> { get }
     var errorState: ErrorStateSubject { get }
     
-    func viewDidLoad()
+    init(repository: IMoviePlayerRepository,
+         coordinator: IMoviePlayerCoordinator,
+         vmLogic: IMoviePlayerVMLogic)
+    
+    // Service
+    func fetchVideoURL()
+    
+    // Coordinator Actions
     func closeButtonTapped()
+    
+    // Player Lifecycle
     func playerIsReady(totalDuration: Double)
     func playerDidFail()
     func timeProgressed(to seconds: Double)
+    
+    // Playback Controls
     func playButtonTapped()
     func pauseButtonTapped()
     func skip(by seconds: Double)
+    
+    // Seeking
     func beginSeeking()
     func seek(toProgress progress: Float)
     func endSeeking(wasPlaying: Bool)
@@ -36,18 +49,43 @@ final class MoviePlayerViewModel: BaseViewModel, IMoviePlayerViewModel {
     private var totalDuration: Double = 0
     private var currentTime: Double = 0
     
-    required init(repository: IMoviePlayerRepository, coordinator: IMoviePlayerCoordinator, vmLogic: IMoviePlayerVMLogic) {
+    required init(repository: IMoviePlayerRepository,
+                  coordinator: IMoviePlayerCoordinator,
+                  vmLogic: IMoviePlayerVMLogic) {
         self.repository = repository; self.coordinator = coordinator; self.vmLogic = vmLogic; super.init()
     }
+}
+
+
+// MARK: Service
+extension MoviePlayerViewModel {
     
-    func viewDidLoad() {
+    func fetchVideoURL() {
         viewState.send(.loading(true))
-        fetchVideoURL()
+        Task { @MainActor in
+            do {
+                let url: URL = try await repository.fetchMovieURL()
+                viewState.send(.videoLoaded(url: url, title: vmLogic.videoTitle))
+            } catch {
+                errorState.send("Failed to fetch video URL.")
+                viewState.send(.loading(false))
+            }
+        }
     }
+}
+
+
+// MARK: Coordinator Actions
+extension MoviePlayerViewModel {
     
     func closeButtonTapped() {
         coordinator.dismiss(animated: true, completion: nil)
     }
+}
+
+
+// MARK: Player Lifecycle
+extension MoviePlayerViewModel {
     
     // ViewController, oynatıcının hazır olduğunu bildirdiğinde çağrılır.
     func playerIsReady(totalDuration: Double) {
@@ -68,6 +106,11 @@ final class MoviePlayerViewModel: BaseViewModel, IMoviePlayerViewModel {
         let timeText: String = vmLogic.formatTime(from: seconds)
         viewState.send(.updateProgress(progress: progress, time: timeText))
     }
+}
+
+
+// MARK: Playback Controls
+extension MoviePlayerViewModel {
     
     func playButtonTapped() {
         viewState.send(.play)
@@ -81,6 +124,11 @@ final class MoviePlayerViewModel: BaseViewModel, IMoviePlayerViewModel {
         let newTime: Double = self.currentTime + seconds
         viewState.send(.seek(toSeconds: max(0, newTime))) // Negatif zamana gitmeyi engelle.
     }
+}
+
+
+// MARK: Seeking
+extension MoviePlayerViewModel {
     
     func beginSeeking() {
         viewState.send(.pause)
@@ -99,19 +147,8 @@ final class MoviePlayerViewModel: BaseViewModel, IMoviePlayerViewModel {
             viewState.send(.play)
         }
     }
-    
-    private func fetchVideoURL() {
-        Task { @MainActor in
-            do {
-                let url: URL = try await repository.fetchMovieURL()
-                viewState.send(.videoLoaded(url: url, title: vmLogic.videoTitle))
-            } catch {
-                errorState.send("Failed to fetch video URL.")
-                viewState.send(.loading(false))
-            }
-        }
-    }
 }
+
 
 enum MoviePlayerViewState {
     case loading(Bool)

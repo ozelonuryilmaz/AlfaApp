@@ -38,6 +38,7 @@ final class GenreMoviesViewController: AlfaBaseViewController<GenreMoviesRootVie
     }
 }
 
+
 // MARK: Setup
 private extension GenreMoviesViewController {
     
@@ -53,6 +54,7 @@ private extension GenreMoviesViewController {
         }
     }
 }
+
 
 // MARK: Update
 extension GenreMoviesViewController {
@@ -74,6 +76,7 @@ extension GenreMoviesViewController {
         }
     }
 }
+
 
 // MARK: UICollectionViewDelegate
 extension GenreMoviesViewController: UICollectionViewDelegate {

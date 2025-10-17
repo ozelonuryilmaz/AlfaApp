@@ -61,7 +61,8 @@ final class MoviePosterCell: UICollectionViewCell {
     }()
 }
 
-// MARK: Setup
+
+// MARK: SetupUI
 private extension MoviePosterCell {
     
     func setupUI() {

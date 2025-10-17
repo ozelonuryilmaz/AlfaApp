@@ -39,6 +39,7 @@ struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
     
 }
 
+
 // MARK: Setter
 internal extension MovieExplorerVMLogic {
     
@@ -50,6 +51,7 @@ internal extension MovieExplorerVMLogic {
         self.currentGenreId = genreId
     }
 }
+
 
 // MARK: Getter
 internal extension MovieExplorerVMLogic {
@@ -78,6 +80,7 @@ internal extension MovieExplorerVMLogic {
         return genres[currentIndex + 1]
     }
 }
+
 
 // MARK: Calculations
 internal extension MovieExplorerVMLogic {

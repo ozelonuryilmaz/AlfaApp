@@ -18,17 +18,20 @@ protocol IMoviePlayerVMLogic {
 
 struct MoviePlayerVMLogic: IMoviePlayerVMLogic {
     
-    // MARK: Properties
-    let videoTitle: String
+    private let movie: DiscoverResultUIModel
     
-    // MARK: - Initialization
     init(params: MoviePlayerParams) {
-        self.videoTitle = params.movie.title
+        self.movie = params.movie
     }
     
-    // MARK: Public Methods
+    // Computed Properties
     
-    /// Formats seconds into a MM:SS string.
+    var videoTitle: String {
+        return movie.title
+    }
+    
+    // Methods
+    
     func formatTime(from seconds: Double) -> String {
         let value = Int(seconds.rounded())
         guard !seconds.isNaN, value >= 0 else { return "00:00" }

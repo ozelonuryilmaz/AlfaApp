@@ -46,7 +46,8 @@ final class MovieExplorerRootView: BaseRootView {
     }()
 }
 
-// MARK: Setup
+
+// MARK: SetupUI
 private extension MovieExplorerRootView {
     
     func setupUI() {
