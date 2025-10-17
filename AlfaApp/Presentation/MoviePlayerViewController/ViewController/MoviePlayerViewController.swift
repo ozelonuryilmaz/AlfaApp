@@ -15,9 +15,11 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
     private var playerObservers: Set<AnyCancellable> = []
     private var wasPlayingBeforeSeek = false
 
-    init(viewModel: IMoviePlayerViewModel) {
+    init(viewModel: IMoviePlayerViewModel,
+         didDismissCallback: DefaultDismissCallback? = nil) {
         self.viewModel = viewModel
         super.init()
+        self.didDismissCallback = didDismissCallback
     }
     
     required init?(coder: NSCoder) {

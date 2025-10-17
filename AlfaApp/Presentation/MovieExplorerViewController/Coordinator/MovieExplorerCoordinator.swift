@@ -28,11 +28,8 @@ final class MovieExplorerCoordinator: RootableCoordinator, IMovieExplorerCoordin
     
     func presentToMoviePlayerVC(with movie: DiscoverResultUIModel) {
         guard let navigationController = navigationController else { return }
-        
         let moviePlayerCoordinator = MoviePlayerCoordinator(presenterViewController: navigationController)
             .with(data: MoviePlayerParams(movie: movie))
-        
-        // TODO: didDismissCallback'ı MoviePlayer'ın viewWillDisappear lifecycle'dan çağır
         
         moviePlayerCoordinator.didDismissCallback = { [weak self, weak moviePlayerCoordinator] in
             guard let self = self, let coordinator = moviePlayerCoordinator else { return }
@@ -40,12 +37,10 @@ final class MovieExplorerCoordinator: RootableCoordinator, IMovieExplorerCoordin
         }
         
         childCoordinators.append(moviePlayerCoordinator)
-        
         moviePlayerCoordinator.start()
     }
     
     private func removeChildCoordinator(_ coordinator: Coordinator) {
         childCoordinators = childCoordinators.filter { $0 !== coordinator }
-        print("Child coordinator removed. Remaining: \(childCoordinators.count)")
     }
 }

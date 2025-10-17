@@ -10,7 +10,8 @@ import Foundation
 
 enum MoviePlayerBuilder {
     
-    static func generate(coordinator: IMoviePlayerCoordinator & BaseCoordinator) -> MoviePlayerViewController {
+    static func generate(coordinator: IMoviePlayerCoordinator & BaseCoordinator,
+                         didDismissCallback: DefaultDismissCallback?) -> MoviePlayerViewController {
         
         let movieUrlUsecase = MovieUrlUseCaseProvider.makeMovieUrlUseCase()
         let repository: IMoviePlayerRepository = MoviePlayerRepository(movieUrlUsecase: movieUrlUsecase)
@@ -25,7 +26,8 @@ enum MoviePlayerBuilder {
         )
         
         return MoviePlayerViewController(
-            viewModel: viewModel
+            viewModel: viewModel,
+            didDismissCallback: didDismissCallback
         )
     }
 }

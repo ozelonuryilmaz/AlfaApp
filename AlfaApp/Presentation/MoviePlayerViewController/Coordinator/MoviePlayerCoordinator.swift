@@ -15,7 +15,7 @@ protocol IMoviePlayerCoordinator: IPresentationCoordinator {
 final class MoviePlayerCoordinator: PresentationCoordinator, IMoviePlayerCoordinator {
     
     override func start() {
-        let controller = MoviePlayerBuilder.generate(coordinator: self)
+        let controller = MoviePlayerBuilder.generate(coordinator: self, didDismissCallback: self.didDismissCallback)
         controller.modalPresentationStyle = .fullScreen
         showScreen(viewController: controller)
     }

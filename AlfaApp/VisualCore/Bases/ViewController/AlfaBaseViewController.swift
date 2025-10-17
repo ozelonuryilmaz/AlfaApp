@@ -21,8 +21,12 @@ class AlfaBaseViewController<RootView: BaseRootView>: UIViewController {
     }
     
     var cancelBag = Set<AnyCancellable>()
-
+    
     private var nativeProgressView: NativeProgressView?
+    
+    // Sayfa kapanmalarını alt sayfaya bildirmek için kullanılıyor
+    public var willDismissCallback: DefaultDismissCallback? = nil
+    public var didDismissCallback: DefaultDismissCallback? = nil
     
     deinit {
         print("killed: \(type(of: self))")
@@ -49,6 +53,18 @@ class AlfaBaseViewController<RootView: BaseRootView>: UIViewController {
         } else {
             navigationItem.titleView = nil
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.willDismissCallback?()
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        self.didDismissCallback?()
     }
 
     internal func initDidLoad() {
