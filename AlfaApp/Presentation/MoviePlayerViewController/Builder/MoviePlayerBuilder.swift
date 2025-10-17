@@ -12,7 +12,9 @@ enum MoviePlayerBuilder {
     
     static func generate(coordinator: IMoviePlayerCoordinator & BaseCoordinator) -> MoviePlayerViewController {
         
-        let repository: IMoviePlayerRepository = MoviePlayerRepository()
+        let movieUrlUsecase = MovieUrlUseCaseProvider.makeMovieUrlUseCase()
+        let repository: IMoviePlayerRepository = MoviePlayerRepository(movieUrlUsecase: movieUrlUsecase)
+        
         let params: MoviePlayerParams = coordinator.getParams()
         let vmLogic: IMoviePlayerVMLogic = MoviePlayerVMLogic(params: params)
         

@@ -7,21 +7,26 @@
 //
 
 import Foundation
+import AlfaDomain
 
 protocol IMoviePlayerRepository: AnyObject {
     func fetchMovieURL() async throws -> URL
 }
 
 final class MoviePlayerRepository: BaseRepository, IMoviePlayerRepository {
+    private let movieUrlUsecase: IMovieUrlUseCase
+    
+    init(movieUrlUsecase: IMovieUrlUseCase) {
+        self.movieUrlUsecase = movieUrlUsecase
+    }
     
     func fetchMovieURL() async throws -> URL {
-        
-        // TODO: Data katmanından secureVideoURL ile getirilecek
-        
-        try await Task.sleep(nanoseconds: 1_000_000_000)
-        guard let url = URL(string: "https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_fmp4/master.m3u8") else {
-            throw URLError(.badURL)
+        do {
+            let movieUrl: URL = try await movieUrlUsecase.execute()
+            return movieUrl
         }
-        return url
+        catch {
+            throw error
+        }
     }
 }
