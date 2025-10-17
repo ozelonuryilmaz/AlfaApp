@@ -60,8 +60,8 @@ private extension MovieExplorerViewController {
             setupInitialPage()
         case .moviesLoading(let genreId):
             genreViewControllers[genreId]?.showLoading()
-        case .moviesLoaded(let genreId, let movies, let initialOffset):
-            genreViewControllers[genreId]?.update(with: movies, initialOffset: initialOffset)
+        case .moviesLoaded(let genreId, let movies, let initialOffset, let isPagination):
+            genreViewControllers[genreId]?.update(with: movies, initialOffset: initialOffset, isPagination: isPagination)
         }
     }
     

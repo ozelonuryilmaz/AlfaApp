@@ -56,7 +56,7 @@ private extension GenreMoviesViewController {
 // MARK: Update
 extension GenreMoviesViewController {
     
-    func update(with movies: [DiscoverResultUIModel], initialOffset: CGPoint) {
+    func update(with movies: [DiscoverResultUIModel], initialOffset: CGPoint, isPagination: Bool) {
         self.movies = movies
         self.isLoadingNextPage = false
         rootView.showLoading(false)
@@ -64,9 +64,9 @@ extension GenreMoviesViewController {
         var snapshot = NSDiffableDataSourceSnapshot<Int, Int>()
         snapshot.appendSections([0])
         snapshot.appendItems(movies.map { $0.id })
-        dataSource.apply(snapshot, animatingDifferences: true)
+        dataSource.apply(snapshot, animatingDifferences: isPagination)
         
-        if initialOffset != .zero && rootView.collectionView.contentSize.height > rootView.collectionView.bounds.height {
+        if !isPagination && initialOffset != .zero && rootView.collectionView.contentSize.height > rootView.collectionView.bounds.height {
             DispatchQueue.main.async { [weak self] in
                 self?.rootView.collectionView.setContentOffset(initialOffset, animated: false)
             }

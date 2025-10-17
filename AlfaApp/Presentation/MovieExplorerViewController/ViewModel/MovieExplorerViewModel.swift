@@ -77,7 +77,7 @@ internal extension MovieExplorerViewModel {
     
     func loadMovies(for genreId: Int) {
         if let cachedEntry = cacheService.getEntry(for: genreId) {
-            viewState.value = .moviesLoaded(genreId: genreId, movies: cachedEntry.movies, initialOffset: cachedEntry.lastContentOffset)
+            viewState.value = .moviesLoaded(genreId: genreId, movies: cachedEntry.movies, initialOffset: cachedEntry.lastContentOffset, isPagination: false)
             return
         }
         
@@ -87,7 +87,7 @@ internal extension MovieExplorerViewModel {
                 let discoverResults = try await repository.fetchDiscover(genreId: genreId, page: 1)
                 let newEntry = GenreCacheEntry(movies: discoverResults.results, currentPage: 1, lastContentOffset: .zero)
                 cacheService.cache(entry: newEntry, for: genreId)
-                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: .zero)
+                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: .zero, isPagination: false)
             } catch {
                 errorState.value = "Filmler yüklenemedi: \(error.localizedDescription)"
             }
@@ -108,7 +108,7 @@ internal extension MovieExplorerViewModel {
                 }
                 
                 cacheService.cache(entry: newEntry, for: genreId)
-                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: newEntry.lastContentOffset)
+                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: newEntry.lastContentOffset, isPagination: true)
                 
             } catch {
                 print("Failed to load next page: \(error.localizedDescription)")
@@ -153,5 +153,5 @@ enum MovieExplorerViewState {
     case initialLoading
     case genresLoaded
     case moviesLoading(genreId: Int)
-    case moviesLoaded(genreId: Int, movies: [DiscoverResultUIModel], initialOffset: CGPoint)
+    case moviesLoaded(genreId: Int, movies: [DiscoverResultUIModel], initialOffset: CGPoint, isPagination: Bool)
 }
