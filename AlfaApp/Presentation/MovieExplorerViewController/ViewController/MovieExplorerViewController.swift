@@ -39,7 +39,7 @@ final class MovieExplorerViewController: AlfaBaseViewController<MovieExplorerRoo
 }
 
 
-// MARK: Observable
+// MARK: ViewModel State Handling
 private extension MovieExplorerViewController {
     
     func observeViewState() {

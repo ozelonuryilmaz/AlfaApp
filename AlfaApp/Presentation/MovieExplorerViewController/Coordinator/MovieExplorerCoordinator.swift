@@ -14,6 +14,8 @@ protocol IMovieExplorerCoordinator: AnyObject {
 
 final class MovieExplorerCoordinator: RootableCoordinator, IMovieExplorerCoordinator {
     
+    // TODO: childCoordinators yapısı düzenlenecek
+    
     private var childCoordinators: [Coordinator] = []
     private weak var navigationController: UINavigationController?
     

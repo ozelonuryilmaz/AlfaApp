@@ -30,13 +30,15 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
         playerObservers.forEach { $0.cancel() }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func setupView() {
         rootView.delegate = self
+    }
+    
+    override func initialComponents() {
         observeViewModel()
         viewModel.fetchVideoURL()
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
@@ -48,7 +50,7 @@ final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRo
         AVAudioSession.sharedInstance().deactivatePlaybackSession()
     }
     
-    // Immersive experience için status bar ve home indicator'ı gizle.
+    // Immersive experience için status bar ve home indicator gizlendi
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     override var prefersStatusBarHidden: Bool { true }
 }
@@ -94,10 +96,14 @@ private extension MoviePlayerViewController {
 private extension MoviePlayerViewController {
     
     func setupPlayerObservers() {
-        let player = rootView.playerView.player
-        let playerItem = player.currentItem
+        observePlayerStatus()
+        observeTimeControlStatus()
+        observePeriodicTimeUpdates()
+    }
+    
+    func observePlayerStatus() {
+        let playerItem = rootView.playerView.player.currentItem
         
-        // Status Observer
         playerItem?.publisher(for: \.status)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
@@ -106,32 +112,38 @@ private extension MoviePlayerViewController {
                     self?.viewModel.playerIsReady(totalDuration: playerItem?.duration.seconds ?? 0)
                 case .failed:
                     self?.viewModel.playerDidFail()
-                default: break
+                default:
+                    break
                 }
             }
             .store(in: &playerObservers)
+    }
+    
+    func observeTimeControlStatus() {
+        let player = rootView.playerView.player
         
-        // Time Control Observer (Play/Pause/Waiting)
         player.publisher(for: \.timeControlStatus)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] status in
                 let isPlaying = status == .playing
-                self?.rootView.showLoading(status == .waitingToPlayAtSpecifiedRate)
+                let isWaiting = status == .waitingToPlayAtSpecifiedRate
+                
+                self?.rootView.showLoading(isWaiting)
                 self?.rootView.setPlayback(isPlaying: isPlaying)
-                if isPlaying {
-                    AVAudioSession.sharedInstance().activatePlaybackSession()
-                } else {
-                    AVAudioSession.sharedInstance().deactivatePlaybackSession()
-                }
+                
+                let session = AVAudioSession.sharedInstance()
+                isPlaying ? session.activatePlaybackSession() : session.deactivatePlaybackSession()
             }
             .store(in: &playerObservers)
-        
-        // Periyodik Zaman Observer
+    }
+    
+    func observePeriodicTimeUpdates() {
         rootView.playerView.timeObserver.onTimeChange = { [weak self] seconds in
             self?.viewModel.timeProgressed(to: seconds)
         }
     }
 }
+
 
 
 // MARK: MoviePlayerRootViewDelegate

@@ -8,7 +8,7 @@
 import Foundation
 
 
-// TODO: CacheService için Repository,.. kurgulanmalı
+// TODO: CacheService için Repository,.. kurgulanmalı. Tek yerden güncelleme yapılmaya devam edilmeli
 
 
 protocol IMovieCacheService: AnyObject {

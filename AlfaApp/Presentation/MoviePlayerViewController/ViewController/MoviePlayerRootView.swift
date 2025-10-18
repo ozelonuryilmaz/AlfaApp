@@ -34,7 +34,7 @@ final class MoviePlayerRootView: BaseRootView {
     }
     
     // MARK: Definitions
-    let playerView = AlfaPlayerView()
+    let playerView = AlfaPlayerView() // TODO: playerView'ı private yap. Dışarıdan playerView.player.currentItem "." gibi kullanılmasın
     private let controlsView = MoviePlayerControlsView()
     private lazy var activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
@@ -67,7 +67,6 @@ private extension MoviePlayerRootView {
             controlsView.leadingAnchor.constraint(equalTo: leadingAnchor),
             controlsView.trailingAnchor.constraint(equalTo: trailingAnchor),
             
-            // Yükleme göstergesi merkezde
             activityIndicator.centerXAnchor.constraint(equalTo: centerXAnchor),
             activityIndicator.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])

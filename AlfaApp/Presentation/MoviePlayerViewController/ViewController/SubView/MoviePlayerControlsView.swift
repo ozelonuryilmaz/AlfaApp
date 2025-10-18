@@ -59,7 +59,6 @@ extension MoviePlayerControlsView {
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .bold)
         playPauseButton.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
         playPauseButton.isSelected = !isPlaying
-        playPauseButton.alpha = 0.8
     }
 
     func updateProgress(_ progress: Float, currentTime: String) {
@@ -119,7 +118,7 @@ private extension MoviePlayerControlsView {
 
     func setupCenterControls() {
         var buttonConfig = UIButton.Configuration.plain()
-        buttonConfig.baseForegroundColor = .white
+        buttonConfig.baseForegroundColor = .white.withAlphaComponent(0.84)
         buttonConfig.background.backgroundColor = .clear
 
         buttonConfig.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 30, weight: .regular)
