@@ -1,0 +1,17 @@
+strings:
+  inputs:
+    - AlfaApp/AppCore/Resources/Localization/en.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      params:
+        enumName: L10n
+      output: AlfaApp/AppCore/Generated/Localization/L10n.swift
+
+xcassets:
+  inputs:
+    - AlfaApp/AppCore/Resources/Assets/Assets.xcassets
+  outputs:
+    - templateName: swift5
+      params:
+        enumName: Asset
+      output: AlfaApp/AppCore/Generated/Assets/Assets.swift

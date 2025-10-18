@@ -13,7 +13,7 @@ class AlfaBaseViewController<RootView: BaseRootView>: UIViewController {
     let rootView: RootView = RootView()
     
     var baseBackgroundColor: UIColor {
-        return .white
+        return Asset.viewBackground.color
     }
     
     var navigationTitle: String? {

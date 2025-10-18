@@ -108,7 +108,7 @@ extension GenreMoviesViewController: UICollectionViewDelegate {
             
             return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { [weak self] _ in
                 guard let self = self else { return UIMenu(title: "", children: []) }
-                let watchAction = UIAction(title: "İzle", image: UIImage(systemName: "play.fill") ) { _ in
+                let watchAction = UIAction(title: L10n.watch, image: UIImage(systemName: "play.fill") ) { _ in
                     self.handleMovieSelection(at: indexPath)
                 }
                 return UIMenu(title: "", children: [watchAction])
