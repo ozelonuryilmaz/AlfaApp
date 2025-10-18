@@ -33,8 +33,8 @@ struct MoviePlayerVMLogic: IMoviePlayerVMLogic {
     // Methods
     
     func formatTime(from seconds: Double) -> String {
+        guard seconds.isFinite, seconds >= 0 else {  return "00:00" }
         let value = Int(seconds.rounded())
-        guard !seconds.isNaN, value >= 0 else { return "00:00" }
         let minutes = value / 60
         let secondsValue = value % 60
         return String(format: "%02d:%02d", minutes, secondsValue)
