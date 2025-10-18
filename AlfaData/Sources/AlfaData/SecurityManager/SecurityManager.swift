@@ -16,6 +16,7 @@ import SecurityKit
 // TODO: Jailbreak, ReverseEngineer,... tespitinde kısıtlama getir.
 // TODO: ConfidentialKit kullanarak Code Obfuscation uygula
 
+// TODO: Memory'de de hassas bilgiler tutulmadığı kontrol edilmelidir
 
 public protocol ISecurityManager {
     func fetchSecureApiKey() async throws -> String

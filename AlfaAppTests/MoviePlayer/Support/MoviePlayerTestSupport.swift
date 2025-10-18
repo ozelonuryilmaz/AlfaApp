@@ -6,49 +6,11 @@
 //
 
 import Foundation
-import Combine
 @testable import AlfaApp
 
-// MARK: Mock Error
-struct MockError: Error, Equatable {
-    let id = UUID()
-    let description: String
-}
-
-// MARK: ValueCollector
-/// Combine Publisher'larını test etmek için kullanılan yardımcı bir sınıf.
-/// Bir publisher'a abone olur ve yayınlanan tüm değerleri bir dizide toplar.
-final class ValueCollector<T> {
-    var values: [T] = []
-    private var cancellable: AnyCancellable?
-    private let lock = NSLock() // Thread-safety için
-
-    /// `Never` failure tipindeki publisher'lar için (örn: Subject.send())
-    init(_ publisher: any Publisher<T, Never>) {
-        cancellable = publisher
-            .sink { [weak self] value in
-                self?.lock.lock()
-                self?.values.append(value)
-                self?.lock.unlock()
-            }
-    }
-    
-    /// `Error` failure tipindeki publisher'lar için (örn: dataTaskPublisher)
-    init<E: Error>(_ publisher: any Publisher<T, E>) {
-        cancellable = publisher
-            .sink(receiveCompletion: { _ in
-                // Tamamlanma durumunu (completion) şu an için göz ardı ediyoruz.
-            }, receiveValue: { [weak self] value in
-                self?.lock.lock()
-                self?.values.append(value)
-                self?.lock.unlock()
-            })
-    }
-}
-
-
 // MARK: Equatable for ViewState
-// Testlerde XCTAssertEqual kullanabilmek için ViewState'i Equatable yapmamız gerekiyor.
+
+// XCTAssertEqual ile view state'lerini karşılaştırabilmek için gereklidir.
 extension MoviePlayerViewState: Equatable {
     public static func == (lhs: MoviePlayerViewState, rhs: MoviePlayerViewState) -> Bool {
         switch (lhs, rhs) {
