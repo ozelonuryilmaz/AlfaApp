@@ -78,6 +78,17 @@ extension GenreMoviesViewController {
 }
 
 
+// MARK: User Actions
+private extension GenreMoviesViewController {
+    
+    func handleMovieSelection(at indexPath: IndexPath) {
+        guard let tappedMovieId: Int = dataSource.itemIdentifier(for: indexPath),
+              let tappedMovie: DiscoverResultUIModel = self.movies.first(where: { $0.id == tappedMovieId }) else { return }
+        onMovieTapped?(tappedMovie)
+    }
+}
+
+
 // MARK: UICollectionViewDelegate
 extension GenreMoviesViewController: UICollectionViewDelegate {
     
@@ -89,8 +100,18 @@ extension GenreMoviesViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let tappedMovieId: Int = dataSource.itemIdentifier(for: indexPath) else { return }
-        guard let tappedMovie: DiscoverResultUIModel = self.movies.first(where: { $0.id == tappedMovieId }) else { return }
-        onMovieTapped?(tappedMovie)
+        handleMovieSelection(at: indexPath)
     }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+            let identifier = indexPath as NSIndexPath
+            
+            return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { [weak self] _ in
+                guard let self = self else { return UIMenu(title: "", children: []) }
+                let watchAction = UIAction(title: "İzle", image: UIImage(systemName: "play.fill") ) { _ in
+                    self.handleMovieSelection(at: indexPath)
+                }
+                return UIMenu(title: "", children: [watchAction])
+            }
+        }
 }

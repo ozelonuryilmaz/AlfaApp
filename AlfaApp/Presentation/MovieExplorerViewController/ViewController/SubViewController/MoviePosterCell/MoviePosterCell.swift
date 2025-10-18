@@ -29,20 +29,21 @@ final class MoviePosterCell: UICollectionViewCell {
         titleLabel.text = nil
         titleLabel.alpha = 0.0
         gradientView.alpha = 0.0
-        transform = .identity
-        alpha = 1.0
+        // transform = .identity
     }
     
+    /* ContextMenu eklendiği için iptal edildi. Kullanımı değerlendirelecek
     override var isHighlighted: Bool {
         didSet {
             UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5,
                            options: [.curveEaseOut, .allowUserInteraction], animations: {
                 let scale: CGFloat = self.isHighlighted ? 0.96 : 1.0
                 self.transform = CGAffineTransform(scaleX: scale, y: scale)
-                self.alpha = self.isHighlighted ? 0.8 : 1.0
+                // self.alpha = self.isHighlighted ? 0.8 : 1.0
             })
         }
     }
+    */
     
     func configure(with movie: DiscoverResultUIModel) {
         titleLabel.text = movie.title
