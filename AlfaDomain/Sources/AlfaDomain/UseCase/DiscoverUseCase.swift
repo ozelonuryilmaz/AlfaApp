@@ -8,7 +8,8 @@
 import Foundation
 
 public protocol IDiscoverUseCase {
-    func execute(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity
+    func execute(language: String, genreId: Int, page: Int, forceRefresh: Bool) async throws -> DiscoverResultsEntity
+    func clearCache()
 }
 
 public struct DiscoverUseCase: IDiscoverUseCase {
@@ -18,12 +19,16 @@ public struct DiscoverUseCase: IDiscoverUseCase {
         self.discoverRepository = discoverRepository
     }
 
-    public func execute(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity {
+    public func execute(language: String, genreId: Int, page: Int, forceRefresh: Bool) async throws -> DiscoverResultsEntity {
         do {
-            let discover: DiscoverResultsEntity = try await discoverRepository.fetchDiscover(language: language, genreId: genreId, page: page)
+            let discover: DiscoverResultsEntity = try await discoverRepository.fetchDiscover(language: language, genreId: genreId, page: page, forceRefresh: forceRefresh)
             return discover
         } catch {
             throw error
         }
+    }
+    
+    public func clearCache() {
+        discoverRepository.clearCache()
     }
 }

@@ -12,20 +12,16 @@ protocol IMovieExplorerViewModel: AnyObject {
     var viewState: ScreenStateSubject<MovieExplorerViewState> { get }
     var errorState: ErrorStateSubject { get }
     
-    init(repository: IMovieExplorerRepository,
-         coordinator: IMovieExplorerCoordinator,
-         vmLogic: IMovieExplorerVMLogic,
-         cacheService: IMovieCacheService)
-    
     // Services
     func fetchInitialData()
-    func loadMovies(for genreId: Int)
+    func refreshCurrentGenre()
+    func loadMovies(for genreId: Int, forceRefresh: Bool)
     func loadNextPage()
     
     // Coordinator
     func movieTapped(movie: DiscoverResultUIModel)
     
-    // Genres
+    // Genres Management
     func setCurrentGenre(genreId: Int)
     func getGenreName(for genreId: Int) -> String?
     func getGenre(before genreId: Int) -> GenreUIModel?
@@ -36,29 +32,33 @@ protocol IMovieExplorerViewModel: AnyObject {
     func saveScrollPosition(_ offset: CGPoint, for genreId: Int)
 }
 
-final class MovieExplorerViewModel: BaseViewModel, IMovieExplorerViewModel {
+final class MovieExplorerViewModel: IMovieExplorerViewModel {
     private let repository: IMovieExplorerRepository
     private let coordinator: IMovieExplorerCoordinator
+    private let scrollPositionService: IScrollPositionService
     private var vmLogic: IMovieExplorerVMLogic
-    private let cacheService: IMovieCacheService
     
     var viewState = ScreenStateSubject<MovieExplorerViewState>(nil)
     var errorState = ErrorStateSubject(nil)
     
-    required init(repository: IMovieExplorerRepository,
-                  coordinator: IMovieExplorerCoordinator,
-                  vmLogic: IMovieExplorerVMLogic,
-                  cacheService: IMovieCacheService) {
+    init(repository: IMovieExplorerRepository,
+         coordinator: IMovieExplorerCoordinator,
+         scrollPositionService: IScrollPositionService,
+         vmLogic: IMovieExplorerVMLogic) {
         self.repository = repository
         self.coordinator = coordinator
+        self.scrollPositionService = scrollPositionService
         self.vmLogic = vmLogic
-        self.cacheService = cacheService
-        super.init()
+    }
+    
+    deinit {
+        repository.clearCache()
+        scrollPositionService.clearCache()
     }
 }
 
 
-// MARK: Services
+// MARK: Service
 internal extension MovieExplorerViewModel {
     
     func fetchInitialData() {
@@ -71,7 +71,7 @@ internal extension MovieExplorerViewModel {
                 
                 if let firstGenreId = vmLogic.getFirstGenreId() {
                     setCurrentGenre(genreId: firstGenreId)
-                    loadMovies(for: firstGenreId)
+                    loadMovies(for: firstGenreId, forceRefresh: true)
                 }
             } catch {
                 errorState.value = "Kategoriler yüklenemedi: \(error.localizedDescription)"
@@ -79,47 +79,45 @@ internal extension MovieExplorerViewModel {
         }
     }
     
-    func loadMovies(for genreId: Int) {
-        if let cachedEntry = cacheService.getEntry(for: genreId) {
-            viewState.value = .moviesLoaded(genreId: genreId, movies: cachedEntry.movies, initialOffset: cachedEntry.lastContentOffset, isPagination: false)
-            return
-        }
-        
+    func refreshCurrentGenre() {
+        guard let genreId = vmLogic.currentGenreId else { return }
+        loadMovies(for: genreId, forceRefresh: true)
+    }
+    
+    func loadMovies(for genreId: Int, forceRefresh: Bool) {
         viewState.value = .moviesLoading(genreId: genreId)
+        
         Task { @MainActor in
-            do {
-                let discoverResults = try await repository.fetchDiscover(genreId: genreId, page: 1)
-                let newEntry = GenreCacheEntry(movies: discoverResults.results, currentPage: 1, lastContentOffset: .zero)
-                cacheService.cache(entry: newEntry, for: genreId)
-                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: .zero, isPagination: false)
-            } catch {
-                errorState.value = "Filmler yüklenemedi: \(error.localizedDescription)"
-            }
+            await loadMoviesInternal(genreId: genreId, page: 1, forceRefresh: forceRefresh, isPagination: false)
         }
     }
     
     func loadNextPage() {
-        guard let genreId = vmLogic.currentGenreId,
-              let currentEntry = cacheService.getEntry(for: genreId) else { return }
-        let nextPage = currentEntry.currentPage + 1
+        guard let nextPage = vmLogic.getNextPageForCurrentGenre(),
+              let genreId = vmLogic.currentGenreId else { return }
         
         Task { @MainActor in
-            do {
-                let discoverResults = try await repository.fetchDiscover(genreId: genreId, page: nextPage)
-                
-                guard let newEntry = vmLogic.processNextPage(currentEntry: currentEntry, newResults: discoverResults) else { return }
-                
-                cacheService.cache(entry: newEntry, for: genreId)
-                viewState.value = .moviesLoaded(genreId: genreId, movies: newEntry.movies, initialOffset: newEntry.lastContentOffset, isPagination: true)
-            } catch {
-                print("Failed to load next page: \(error.localizedDescription)")
-            }
+            await loadMoviesInternal(genreId: genreId, page: nextPage, forceRefresh: false, isPagination: true)
+        }
+    }
+    
+    private func loadMoviesInternal(genreId: Int, page: Int, forceRefresh: Bool, isPagination: Bool) async {
+        do {
+            let discoverResults = try await repository.fetchDiscover(genreId: genreId, page: page, forceRefresh: forceRefresh)
+            vmLogic.updateMovies(for: genreId, with: discoverResults)
+            
+            let movies = vmLogic.getMovies(for: genreId)
+            let offset = scrollPositionService.getPosition(for: genreId) ?? .zero
+            viewState.value = .moviesLoaded(genreId: genreId, movies: movies, initialOffset: offset, isPagination: isPagination)
+        } catch {
+            let message = isPagination ? "Sonraki sayfa yüklenemedi" : "Filmler yüklenemedi"
+            errorState.value = "\(message): \(error.localizedDescription)"
         }
     }
 }
 
 
-// MARK: Coordinator
+// MARK: Coordinator Actions
 internal extension MovieExplorerViewModel {
     
     func movieTapped(movie: DiscoverResultUIModel) {
@@ -128,7 +126,7 @@ internal extension MovieExplorerViewModel {
 }
 
 
-// MARK: Genres
+// MARK: Genres Management
 internal extension MovieExplorerViewModel {
     
     func setCurrentGenre(genreId: Int) {
@@ -157,11 +155,12 @@ internal extension MovieExplorerViewModel {
 internal extension MovieExplorerViewModel {
     
     func saveScrollPosition(_ offset: CGPoint, for genreId: Int) {
-        cacheService.updateContentOffset(offset, for: genreId)
+        scrollPositionService.savePosition(offset, for: genreId)
     }
 }
 
 
+// MARK: View State Enum
 enum MovieExplorerViewState {
     case initialLoading
     case genresLoaded

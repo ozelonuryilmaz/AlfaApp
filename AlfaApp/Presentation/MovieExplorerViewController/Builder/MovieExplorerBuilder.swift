@@ -23,15 +23,15 @@ enum MovieExplorerBuilder {
             languageProvider: languageProvider
         )
         
+        let scrollPositionService: IScrollPositionService = ScrollPositionService()
+        
         let vmLogic: IMovieExplorerVMLogic = MovieExplorerVMLogic()
-
-        let cacheService: IMovieCacheService = MovieCacheService()
         
         let viewModel: IMovieExplorerViewModel = MovieExplorerViewModel(
             repository: repository,
             coordinator: coordinator,
-            vmLogic: vmLogic,
-            cacheService: cacheService
+            scrollPositionService: scrollPositionService,
+            vmLogic: vmLogic
         )
         
         return MovieExplorerViewController(

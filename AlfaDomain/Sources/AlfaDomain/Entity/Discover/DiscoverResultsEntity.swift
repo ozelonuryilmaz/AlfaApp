@@ -9,8 +9,8 @@ import Foundation
 
 public struct DiscoverResultsEntity {
     
-    public let page: Int
-    public let results: [DiscoverResultEntity]
+    public var page: Int
+    public var results: [DiscoverResultEntity]
     public let total_pages: Int
     public let total_results: Int
     

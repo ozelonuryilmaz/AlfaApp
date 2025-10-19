@@ -11,7 +11,7 @@ protocol IDeviceLanguageProvider {
     var currentLanguageCode: String { get }
 }
 
-final class DeviceLanguageProvider: IDeviceLanguageProvider { // Protocol+DI'da class performanslı
+final class DeviceLanguageProvider: IDeviceLanguageProvider { // Protocol+DI kullanıldığı için final class daha performanslı
     
     private let defaultLocale: String = "en-US"
     

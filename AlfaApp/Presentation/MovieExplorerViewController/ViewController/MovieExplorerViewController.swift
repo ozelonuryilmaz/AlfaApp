@@ -66,6 +66,7 @@ private extension MovieExplorerViewController {
         }
     }
     
+    // TODO: Error Handle kurgulanmalı
     func listenErrorState() {
         viewModel.errorState
             .compactMap { $0 }
@@ -133,7 +134,7 @@ extension MovieExplorerViewController: UIPageViewControllerDataSource, UIPageVie
         
         if let currentVC = pageViewController.viewControllers?.first as? GenreMoviesViewController {
             viewModel.setCurrentGenre(genreId: currentVC.genreId)
-            viewModel.loadMovies(for: currentVC.genreId)
+            viewModel.loadMovies(for: currentVC.genreId, forceRefresh: false)
             updateNavigationTitle(for: currentVC.genreId)
         }
     }

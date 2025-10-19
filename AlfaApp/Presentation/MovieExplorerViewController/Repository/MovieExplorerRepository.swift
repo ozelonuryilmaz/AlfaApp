@@ -12,7 +12,8 @@ import AlfaDomain
 protocol IMovieExplorerRepository: AnyObject {
     
     func fetchGenres() async throws -> GenresUIModel
-    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel
+    func fetchDiscover(genreId: Int, page: Int, forceRefresh: Bool) async throws -> DiscoverResultsUIModel
+    func clearCache()
 }
 
 final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
@@ -43,10 +44,10 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
         }
     }
     
-    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel {
+    func fetchDiscover(genreId: Int, page: Int, forceRefresh: Bool) async throws -> DiscoverResultsUIModel {
         do {
             let lang = languageProvider.currentLanguageCode
-            let entity: DiscoverResultsEntity = try await discoverUsecase.execute(language: lang, genreId: genreId, page: page)
+            let entity: DiscoverResultsEntity = try await discoverUsecase.execute(language: lang, genreId: genreId, page: page, forceRefresh: forceRefresh)
             let mappedDiscover = entity.results.map { discoverEntity in
                 return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, posterURL: discoverEntity.posterURL)
             }
@@ -55,5 +56,9 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
         catch {
             throw error
         }
+    }
+    
+    func clearCache() {
+        discoverUsecase.clearCache()
     }
 }

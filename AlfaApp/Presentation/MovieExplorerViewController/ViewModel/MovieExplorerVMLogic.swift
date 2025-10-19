@@ -9,23 +9,22 @@
 import Foundation
 
 protocol IMovieExplorerVMLogic {
+    // Properties
     var genres: [GenreUIModel] { get }
     var currentGenreId: Int? { get }
     
-    init()
-    
-    // Setter
+    // Genre Management
     mutating func setGenresResponse(_ genresUIModel: [GenreUIModel])
     mutating func setCurrentGenre(genreId: Int)
-    
-    // Getter
     func getFirstGenreId() -> Int?
     func getGenreName(for genreId: Int) -> String?
     func getGenre(before genreId: Int) -> GenreUIModel?
     func getGenre(after genreId: Int) -> GenreUIModel?
     
-    // Calculations
-    func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry?
+    // Movie Data & Pagination Management
+    mutating func updateMovies(for genreId: Int, with results: DiscoverResultsUIModel)
+    func getMovies(for genreId: Int) -> [DiscoverResultUIModel]
+    func getNextPageForCurrentGenre() -> Int?
 }
 
 struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
@@ -34,14 +33,15 @@ struct MovieExplorerVMLogic: IMovieExplorerVMLogic {
     private(set) var genres: [GenreUIModel] = []
     private(set) var currentGenreId: Int?
     
-    // MARK: Initialize
-    init() { }
-    
+    private var moviesByGenre: [Int: [DiscoverResultUIModel]] = [:]
+    private var currentPageByGenre: [Int: Int] = [:]
 }
 
 
-// MARK: Setter
+// MARK: Genre Management
 internal extension MovieExplorerVMLogic {
+    
+    // Setter
     
     mutating func setGenresResponse(_ genresUIModel: [GenreUIModel]) {
         self.genres = genresUIModel
@@ -50,11 +50,8 @@ internal extension MovieExplorerVMLogic {
     mutating func setCurrentGenre(genreId: Int) {
         self.currentGenreId = genreId
     }
-}
-
-
-// MARK: Getter
-internal extension MovieExplorerVMLogic {
+    
+    // Getter
     
     func getFirstGenreId() -> Int? {
         return genres.first?.id
@@ -65,16 +62,14 @@ internal extension MovieExplorerVMLogic {
     }
     
     func getGenre(before genreId: Int) -> GenreUIModel? {
-        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }),
-              currentIndex > 0 else {
+        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }), currentIndex > 0 else {
             return nil
         }
         return genres[currentIndex - 1]
     }
     
     func getGenre(after genreId: Int) -> GenreUIModel? {
-        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }),
-              currentIndex < genres.count - 1 else {
+        guard let currentIndex = genres.firstIndex(where: { $0.id == genreId }), currentIndex < genres.count - 1 else {
             return nil
         }
         return genres[currentIndex + 1]
@@ -82,29 +77,23 @@ internal extension MovieExplorerVMLogic {
 }
 
 
-// MARK: Calculations
+// MARK: Movie Data & Pagination Management
 internal extension MovieExplorerVMLogic {
     
-    func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry? {
-        if newResults.results.isEmpty { return nil }
-        
-        let existingMovieIDs = Set(currentEntry.movies.map { $0.id })
-        let uniqueNewMovies = newResults.results.filter { !existingMovieIDs.contains($0.id) }
-        
-        if uniqueNewMovies.isEmpty {
-            print("Pagination Warning: Page \(newResults.page) contained only duplicate movies.")
-            return nil
+    mutating func updateMovies(for genreId: Int, with results: DiscoverResultsUIModel) {
+        // Repository'den gelen tam ve güncel listeyi doğrudan set et
+        self.moviesByGenre[genreId] = results.results
+        self.currentPageByGenre[genreId] = results.page
+    }
+    
+    func getMovies(for genreId: Int) -> [DiscoverResultUIModel] {
+        return moviesByGenre[genreId] ?? []
+    }
+    
+    func getNextPageForCurrentGenre() -> Int? {
+        guard let genreId = currentGenreId, let currentPage = currentPageByGenre[genreId] else {
+            return 1
         }
-        
-        var updatedMovies = currentEntry.movies
-        updatedMovies.append(contentsOf: uniqueNewMovies)
-        
-        let updatedEntry = GenreCacheEntry(
-            movies: updatedMovies,
-            currentPage: newResults.page,
-            lastContentOffset: currentEntry.lastContentOffset
-        )
-        
-        return updatedEntry
+        return currentPage + 1
     }
 }
