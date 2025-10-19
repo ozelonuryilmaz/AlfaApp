@@ -37,8 +37,8 @@ final class MoviePlayerRootView: BaseRootView {
     let playerView = AlfaPlayerView() // TODO: playerView'ı private yap. Dışarıdan playerView.player.currentItem "." gibi kullanılmasın
     private let controlsView = MoviePlayerControlsView()
     private lazy var activityIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.color = .white
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = .darkGray
         indicator.hidesWhenStopped = true
         return indicator
     }()

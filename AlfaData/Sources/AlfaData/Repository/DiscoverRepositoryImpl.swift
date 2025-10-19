@@ -40,6 +40,8 @@ final public class DiscoverRepositoryImpl: IDiscoverRepository {
         var existingEntity = cacheDataSource.getDiscoverResults(for: genreId)
         
         // Tam liste doğrudan döndürülmesi sağlandı
+        // FIXME: *** Uygulama arkaplana atıldığında NSCache'i sistem temizleyebiliyor. Bu yüzden pagination sonrası ilk verilere ulaşılmayabilir. ***
+        
         if existingEntity != nil {
             let existingIDs = Set(existingEntity!.results.map { $0.id })
             let uniqueNewResults = newEntity.results.filter { !existingIDs.contains($0.id) }

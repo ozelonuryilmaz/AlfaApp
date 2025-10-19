@@ -17,8 +17,8 @@ final class MovieExplorerViewModelTests: XCTestCase {
     // Mocks
     var mockRepository: MockMovieExplorerRepository!
     var mockCoordinator: MockMovieExplorerCoordinator!
+    var mockScrollPositionService: MockScrollPositionService!
     var mockVMLogic: MockMovieExplorerVMLogic!
-    var mockCacheService: MockMovieCacheService!
     
     // Test Support
     var viewStates: ValueCollector<MovieExplorerViewState>!
@@ -30,14 +30,14 @@ final class MovieExplorerViewModelTests: XCTestCase {
         subscriptions = Set<AnyCancellable>()
         mockRepository = MockMovieExplorerRepository()
         mockCoordinator = MockMovieExplorerCoordinator()
+        mockScrollPositionService = MockScrollPositionService()
         mockVMLogic = MockMovieExplorerVMLogic()
-        mockCacheService = MockMovieCacheService()
 
         sut = MovieExplorerViewModel(
             repository: mockRepository,
             coordinator: mockCoordinator,
-            vmLogic: mockVMLogic,
-            cacheService: mockCacheService
+            scrollPositionService: mockScrollPositionService,
+            vmLogic: mockVMLogic
         )
         
         viewStates = ValueCollector(sut.viewState.compactMap { $0 })
@@ -48,8 +48,8 @@ final class MovieExplorerViewModelTests: XCTestCase {
         sut = nil
         mockRepository = nil
         mockCoordinator = nil
+        mockScrollPositionService = nil
         mockVMLogic = nil
-        mockCacheService = nil
         viewStates = nil
         errorStates = nil
         subscriptions = nil
@@ -60,7 +60,7 @@ final class MovieExplorerViewModelTests: XCTestCase {
     
     func test_fetchInitialData_onSuccess_loadsGenresAndFirstPageMovies() async throws {
         // [GIVEN] Hem 'genres' hem de 'discover' servislerinin başarılı olacağını sapla (stub)
-        let mockGenres = GenresUIModel.stub(genres: [GenreUIModel(id: 1, name: "Action")]) //
+        let mockGenres = GenresUIModel.stub(genres: [GenreUIModel(id: 1, name: "Action")])
         let mockMovies = DiscoverResultsUIModel.stub(page: 1, results: [DiscoverResultUIModel.stub(id: 101, title: "Film")])
         
         mockRepository.fetchGenresResult = .success(mockGenres)
@@ -68,6 +68,10 @@ final class MovieExplorerViewModelTests: XCTestCase {
         
         // VMLogic'in ilk kategori ID'sini 1 olarak döndürmesini sağla
         mockVMLogic.stubbedFirstGenreId = 1
+        // VMLogic'in yeni filmleri döndürmesini sağla
+        mockVMLogic.stubbedMovies = mockMovies.results
+        // Scroll servisi .zero döndürsün
+        mockScrollPositionService.stubbedPosition = .zero
         
         // [WHEN] Başlangıç verisini çek
         sut.fetchInitialData()
@@ -83,13 +87,20 @@ final class MovieExplorerViewModelTests: XCTestCase {
         
         // Bağımlılıkların doğru çağrıldığını doğrula
         XCTAssertTrue(mockVMLogic.invokedSetGenresResponse, "Kategoriler VMLogic'e set edilmeli.")
-        XCTAssertTrue(mockCacheService.invokedCache, "İlk sayfa filmleri cache'lenmeli.")
+        XCTAssertTrue(mockVMLogic.invokedSetCurrentGenre, "İlk kategori VMLogic'e set edilmeli.")
+        // Repository'nin 'forceRefresh: true' ile çağrıldığını doğrula
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.genreId, 1)
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.page, 1)
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.forceRefresh, true)
+        // VMLogic'in filmleri güncellediğini doğrula
+        XCTAssertTrue(mockVMLogic.invokedUpdateMovies)
         XCTAssertTrue(errorStates.values.isEmpty, "Başarı durumunda hata olmamalı.")
     }
     
     func test_fetchInitialData_onGenreFailure_sendsError() async throws {
         // [GIVEN] 'genres' servisinin hata vereceğini sapla
-        mockRepository.fetchGenresResult = .failure(MockError(description: "Genre Error"))
+        let error = MockError(description: "Kategori Hatası")
+        mockRepository.fetchGenresResult = .failure(error)
         
         // [WHEN] Başlangıç verisini çek
         sut.fetchInitialData()
@@ -98,51 +109,41 @@ final class MovieExplorerViewModelTests: XCTestCase {
         // [THEN] Sadece 1 state (loading) ve 1 hata state'i olmalı
         XCTAssertEqual(viewStates.values, [.initialLoading])
         XCTAssertEqual(errorStates.values.count, 1)
-        XCTAssertEqual(errorStates.values.first, "Kategoriler yüklenemedi: The operation couldn’t be completed. (AlfaAppTests.MockError error 1.)")
+        // ViewModel'deki yeni hata formatına uy
+        let expectedError = "Kategoriler yüklenemedi: \(error.localizedDescription)"
+        XCTAssertEqual(errorStates.values.first, expectedError)
     }
 
-    // MARK: - Load Movies (Cache Hit/Miss)
-
-    func test_loadMovies_withCacheHit_sendsCachedMovies() {
-        // [GIVEN] Cache servisinin belirli bir kategori için dolu bir entry döndüreceğini sapla
-        let cachedMovies = [DiscoverResultUIModel.stub(id: 99, title: "Cached Movie")]
-        let cachedEntry = GenreCacheEntry(movies: cachedMovies, currentPage: 1, lastContentOffset: CGPoint(x: 0, y: 100))
-        mockCacheService.stubbedEntry = cachedEntry
-        
-        // [WHEN] Filmleri yükle
-        sut.loadMovies(for: 9)
-        
-        // [THEN] Cache'den gelen filmler ve offset ile .moviesLoaded state'i gönderilmeli
-        XCTAssertEqual(viewStates.values, [
-            .moviesLoaded(genreId: 9, movies: cachedMovies, initialOffset: cachedEntry.lastContentOffset, isPagination: false)
-        ])
-        // Repository'nin çağrılmadığını doğrula (en önemlisi)
-        XCTAssertNil(mockRepository.invokedFetchDiscoverParams, "Cache hit olduğunda repository çağrılmamalı.")
-    }
-
-    func test_loadMovies_withCacheMiss_fetchesNewMovies() async throws {
+    // MARK: Load Movies
+    
+    func test_loadMovies_fetchesNewMoviesAndReadsOffset() async throws {
         // [GIVEN] Cache servisi 'nil' döndürecek (cache miss)
-        mockCacheService.stubbedEntry = nil
+        let expectedOffset = CGPoint(x: 0, y: 150)
+        mockScrollPositionService.stubbedPosition = expectedOffset
         
         // Repository'nin yeni filmler döndüreceğini sapla
         let newMovies = DiscoverResultsUIModel.stub(page: 1, results: [DiscoverResultUIModel.stub(id: 101, title: "New Movie")])
         mockRepository.fetchDiscoverResult = .success(newMovies)
+        mockVMLogic.stubbedMovies = newMovies.results
         
-        // [WHEN] Filmleri yükle
-        sut.loadMovies(for: 1)
+        // [WHEN] Filmleri 'forceRefresh: false' ile yükle
+        sut.loadMovies(for: 1, forceRefresh: false)
         try await Task.sleep(nanoseconds: 100_000_000)
         
-        // [THEN] Önce loading, sonra yeni filmlerle loaded state'i gönderilmeli
+        // [THEN] Önce loading, sonra yeni filmlerle ve doğru offset ile loaded state'i gönderilmeli
         XCTAssertEqual(viewStates.values, [
             .moviesLoading(genreId: 1),
-            .moviesLoaded(genreId: 1, movies: newMovies.results, initialOffset: .zero, isPagination: false)
+            .moviesLoaded(genreId: 1, movies: newMovies.results, initialOffset: expectedOffset, isPagination: false)
         ])
         
         // Repository'nin doğru parametrelerle çağrıldığını doğrula
         XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.genreId, 1)
         XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.page, 1)
-        // Yeni verinin cache'lendiğini doğrula
-        XCTAssertTrue(mockCacheService.invokedCache)
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.forceRefresh, false)
+        // Yeni verinin VMLogic'e işlendiğini doğrula
+        XCTAssertTrue(mockVMLogic.invokedUpdateMovies)
+        // Scroll pozisyonunun okunduğunu doğrula
+        XCTAssertTrue(mockScrollPositionService.invokedGetPosition)
     }
 
     // MARK: Pagination
@@ -150,16 +151,13 @@ final class MovieExplorerViewModelTests: XCTestCase {
     func test_loadNextPage_onSuccess_appendsMovies() async throws {
         // [GIVEN] Gerekli bağımlılıkları ayarla
         let genreId = 1
-        let currentMovies = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
-        let currentEntry = GenreCacheEntry(movies: currentMovies, currentPage: 1, lastContentOffset: .zero) //
+        let nextPage = 2
         let newPageMovies = DiscoverResultsUIModel.stub(page: 2, results: [DiscoverResultUIModel.stub(id: 2, title: "Film 2")])
-        let mergedMovies = currentMovies + newPageMovies.results
-        let mergedEntry = GenreCacheEntry(movies: mergedMovies, currentPage: 2, lastContentOffset: .zero) //
         
-        mockVMLogic.stubbedCurrentGenreId = genreId // VMLogic'in mevcut kategoriyi bilmesini sağla
-        mockCacheService.stubbedEntry = currentEntry // Cache'in 1. sayfayı bilmesini sağla
+        mockVMLogic.stubbedCurrentGenreId = genreId
+        mockVMLogic.stubbedNextPage = nextPage // VMLogic'in sonraki sayfayı (2) döndürmesini sağla
         mockRepository.fetchDiscoverResult = .success(newPageMovies) // Repo'nun 2. sayfayı dönmesini sağla
-        mockVMLogic.processNextPageHandler = { _, _ in mergedEntry } // VMLogic'in veriyi birleştirmesini sağla
+        mockScrollPositionService.stubbedPosition = .zero
         
         // [WHEN] Sonraki sayfayı yükle
         sut.loadNextPage()
@@ -167,18 +165,15 @@ final class MovieExplorerViewModelTests: XCTestCase {
         
         // [THEN] Repository'nin 2. sayfayı istediğini doğrula
         XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.genreId, genreId)
-        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.page, 2)
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.page, nextPage)
+        XCTAssertEqual(mockRepository.invokedFetchDiscoverParams?.forceRefresh, false) // Pagination'da refresh false olmalı
         
         // VMLogic'in birleştirme işlemini yaptığını doğrula
-        XCTAssertTrue(mockVMLogic.invokedProcessNextPage)
+        XCTAssertTrue(mockVMLogic.invokedUpdateMovies)
         
-        // Cache'in yeni birleştirilmiş veri ile güncellendiğini doğrula
-        XCTAssertTrue(mockCacheService.invokedCache)
-        
-        // View'a birleştirilmiş listenin gönderildiğini doğrula
-        XCTAssertEqual(viewStates.values, [
-            .moviesLoaded(genreId: genreId, movies: mergedMovies, initialOffset: .zero, isPagination: true)
-        ])
+        // View'a 'isPagination: true' state'inin gönderildiğini doğrula
+        let lastState = viewStates.values.last
+        XCTAssertEqual(lastState, .moviesLoaded(genreId: genreId, movies: [DiscoverResultUIModel(id: 2, title: "Film 2", posterURL: nil)], initialOffset: .zero, isPagination: true))
     }
 
     // MARK: Coordinator & Cache Actions
@@ -204,8 +199,31 @@ final class MovieExplorerViewModelTests: XCTestCase {
         sut.saveScrollPosition(offset, for: genreId)
         
         // [THEN] Cache servisinin doğru fonksiyonu doğru parametrelerle çağırdığını doğrula
-        XCTAssertTrue(mockCacheService.invokedUpdateContentOffset)
-        XCTAssertEqual(mockCacheService.invokedUpdateContentOffsetParams?.genreId, genreId)
-        XCTAssertEqual(mockCacheService.invokedUpdateContentOffsetParams?.offset, offset)
+        XCTAssertTrue(mockScrollPositionService.invokedSavePosition)
+        XCTAssertEqual(mockScrollPositionService.invokedSavePositionParams?.genreId, genreId)
+        XCTAssertEqual(mockScrollPositionService.invokedSavePositionParams?.offset, offset)
+    }
+    
+    // MARK: Deinit
+    
+    func test_deinit_clearsCaches() {
+        // [GIVEN] SUT'u lokal bir değişkende oluştur
+        var localSut: MovieExplorerViewModel? = MovieExplorerViewModel(
+            repository: mockRepository,
+            coordinator: mockCoordinator,
+            scrollPositionService: mockScrollPositionService,
+            vmLogic: mockVMLogic
+        )
+        
+        // Başlangıçta fonksiyonların çağrılmadığını doğrula
+        XCTAssertFalse(mockRepository.invokedClearCache)
+        XCTAssertFalse(mockScrollPositionService.invokedClearCache)
+        
+        // [WHEN] SUT referansı nil yapılır ve deinit tetiklenir
+        localSut = nil
+        
+        // [THEN] Her iki cache servisi de temizlenmeli
+        XCTAssertTrue(mockRepository.invokedClearCache)
+        XCTAssertTrue(mockScrollPositionService.invokedClearCache)
     }
 }

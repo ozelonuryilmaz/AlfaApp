@@ -8,19 +8,6 @@
 import Foundation
 import AlfaDomain
 
-import Foundation
-import AlfaDomain
-
-final public class DiscoverCacheEntry {
-    let entity: DiscoverResultsEntity
-    let timestamp: Date
-    
-    public init(entity: DiscoverResultsEntity) {
-        self.entity = entity
-        self.timestamp = Date()
-    }
-}
-
 public protocol IDiscoverCacheDataSource: AnyObject {
     func getDiscoverResults(for genreId: Int) -> DiscoverResultsEntity?
     func saveDiscoverResults(_ results: DiscoverResultsEntity, for genreId: Int)
@@ -30,8 +17,10 @@ public protocol IDiscoverCacheDataSource: AnyObject {
 
 final public class DiscoverCacheDataSource: IDiscoverCacheDataSource {
     
-    // TODO: in-memory yerine FileManager(Persistent Cache) tercih edilebilir.
-    // Repository'ye tam ve güncel liste doğrudan döndürülmesi sağlandı. Cache temelleri atıldı
+    // TODO: in-memory yerine FileManager(Persistent Cache) tercih edilebilir. Cache 15 dakika da bir otomatik temizlenebilir
+    // Repository'ye tam ve güncel liste doğrudan döndürülmesi sağlandı -> Cache temelleri atıldı
+    
+    // FIXME: *** Uygulama arkaplana atıldığında NSCache'i sistem temizleyebiliyor. Bu yüzden pagination sonrası ilk verilere(cache) ulaşılmayabilir. ***
     
     private let cache = NSCache<NSNumber, DiscoverCacheEntry>()
     
@@ -59,5 +48,17 @@ final public class DiscoverCacheDataSource: IDiscoverCacheDataSource {
     public func clearCache(for genreId: Int) {
         let key = NSNumber(value: genreId)
         cache.removeObject(forKey: key)
+    }
+}
+
+
+// MARK: DiscoverCacheEntry
+final public class DiscoverCacheEntry {
+    let entity: DiscoverResultsEntity
+    let timestamp: Date
+    
+    public init(entity: DiscoverResultsEntity) {
+        self.entity = entity
+        self.timestamp = Date()
     }
 }

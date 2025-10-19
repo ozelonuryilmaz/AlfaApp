@@ -18,13 +18,16 @@ final class MockMovieExplorerVMLogic: IMovieExplorerVMLogic {
     var stubbedGenreBefore: GenreUIModel?
     var stubbedGenreAfter: GenreUIModel?
     
-    // Handler: Karmaşık fonksiyonların davranışını dışarıdan yönetmek için
-    var processNextPageHandler: ((GenreCacheEntry, DiscoverResultsUIModel) -> GenreCacheEntry?)?
+    var stubbedMovies: [DiscoverResultUIModel] = []
+    var stubbedNextPage: Int?
     
     // MARK: Spies (Casuslar)
     private(set) var invokedSetGenresResponse: Bool = false
     private(set) var invokedSetCurrentGenre: Bool = false
-    private(set) var invokedProcessNextPage: Bool = false
+    
+    private(set) var invokedUpdateMovies: Bool = false
+    private(set) var invokedGetMovies: Bool = false
+    private(set) var invokedGetNextPage: Bool = false
 
     // MARK: Protocol Implementation
     
@@ -59,9 +62,18 @@ final class MockMovieExplorerVMLogic: IMovieExplorerVMLogic {
         return stubbedGenreAfter
     }
     
-    func processNextPage(currentEntry: GenreCacheEntry, newResults: DiscoverResultsUIModel) -> GenreCacheEntry? {
-        invokedProcessNextPage = true
-        // Eğer bir handler tanımlanmışsa onu kullan, yoksa nil dön
-        return processNextPageHandler?(currentEntry, newResults)
+    func updateMovies(for genreId: Int, with results: DiscoverResultsUIModel) {
+        invokedUpdateMovies = true
+        stubbedMovies = results.results
+    }
+    
+    func getMovies(for genreId: Int) -> [DiscoverResultUIModel] {
+        invokedGetMovies = true
+        return stubbedMovies
+    }
+    
+    func getNextPageForCurrentGenre() -> Int? {
+        invokedGetNextPage = true
+        return stubbedNextPage
     }
 }

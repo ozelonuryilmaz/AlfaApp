@@ -68,65 +68,51 @@ final class MovieExplorerVMLogicTests: XCTestCase {
         XCTAssertNil(nextGenre)
     }
 
-    // MARK: Calculation Tests (processNextPage)
+    // MARK: Movie & Pagination Tests
     
-    func test_processNextPage_withUniqueMovies() {
-        // [GIVEN] Mevcut bir cache ve yeni filmler (duplicate yok)
-        let currentMovies = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
-        let currentEntry = GenreCacheEntry(movies: currentMovies, currentPage: 1, lastContentOffset: .zero)
-        let newMovies = [DiscoverResultUIModel.stub(id: 2, title: "Film 2")]
-        let newResults = DiscoverResultsUIModel.stub(page: 2, results: newMovies)
+    func test_updateMovies_storesMoviesAndPage() {
+        // [GIVEN] 1. sayfa için filmler
+        let moviesPage1 = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
+        let resultsPage1 = DiscoverResultsUIModel.stub(page: 1, results: moviesPage1)
         
-        // [WHEN] Sayfa işleme fonksiyonunu çağır
-        let updatedEntry = sut.processNextPage(currentEntry: currentEntry, newResults: newResults)
+        // [WHEN] 1. sayfayı VMLogic'e işle
+        sut.updateMovies(for: 10, with: resultsPage1)
         
-        // [THEN] Yeni entry, filmleri birleştirmiş ve sayfayı artırmış olmalı
-        XCTAssertEqual(updatedEntry?.movies.count, 2)
-        XCTAssertEqual(updatedEntry?.currentPage, 2)
-        XCTAssertEqual(updatedEntry?.movies.last?.title, "Film 2")
+        // [THEN] Filmler ve sayfa doğru depolanmalı
+        XCTAssertEqual(sut.getMovies(for: 10).count, 1)
+        XCTAssertEqual(sut.getMovies(for: 10).first?.title, "Film 1")
+        
+        // [GIVEN] 2. sayfa için filmler
+        let moviesPage2 = [DiscoverResultUIModel.stub(id: 2, title: "Film 2")]
+        let resultsPage2 = DiscoverResultsUIModel.stub(page: 2, results: moviesPage2)
+        
+        // [WHEN] 2. sayfayı işle (Yeni VMLogic artık birleştirme yapmıyor, üzerine yazıyor)
+        sut.updateMovies(for: 10, with: resultsPage2)
+        
+        // [THEN] VMLogic artık *sadece* 2. sayfa filmlerini tutmalı
+        XCTAssertEqual(sut.getMovies(for: 10).count, 1)
+        XCTAssertEqual(sut.getMovies(for: 10).first?.title, "Film 2")
     }
     
-    func test_processNextPage_withOnlyDuplicateMovies_returnsNil() {
-        // [GIVEN] Mevcut bir cache ve SADECE duplicate olan yeni filmler
-        let currentMovies = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
-        let currentEntry = GenreCacheEntry(movies: currentMovies, currentPage: 1, lastContentOffset: .zero)
-        let newMovies = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")] // Duplicate ID
-        let newResults = DiscoverResultsUIModel.stub(page: 2, results: newMovies)
+    func test_getNextPage_whenNotSet_returnsOne() {
+        // [WHEN] Sonraki sayfa istenir
+        let nextPage = sut.getNextPageForCurrentGenre()
         
-        // [WHEN] Sayfa işleme fonksiyonunu çağır
-        let updatedEntry = sut.processNextPage(currentEntry: currentEntry, newResults: newResults)
-        
-        // [THEN] Benzersiz yeni film olmadığı için nil dönmeli (pagination durmalı)
-        XCTAssertNil(updatedEntry)
+        // [THEN] Varsayılan olarak 1. sayfayı döndürmeli
+        XCTAssertEqual(nextPage, 1)
     }
 
-    func test_processNextPage_withMixedMovies_appendsOnlyUnique() {
-        // [GIVEN] Mevcut bir cache ve karışık (duplicate + unique) filmler
-        let currentMovies = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
-        let currentEntry = GenreCacheEntry(movies: currentMovies, currentPage: 1, lastContentOffset: .zero)
-        let newMovies = [
-            DiscoverResultUIModel.stub(id: 1, title: "Film 1 - Duplicate"),
-            DiscoverResultUIModel.stub(id: 2, title: "Film 2 - Unique")
-        ]
-        let newResults = DiscoverResultsUIModel.stub(page: 2, results: newMovies)
+    func test_getNextPage_whenPageOneExists_returnsTwo() {
+        // [GIVEN] 1. sayfa verisi işlenmiş ve mevcut kategori set edilmiş
+        let moviesPage1 = [DiscoverResultUIModel.stub(id: 1, title: "Film 1")]
+        let resultsPage1 = DiscoverResultsUIModel.stub(page: 1, results: moviesPage1)
+        sut.setCurrentGenre(genreId: 10)
+        sut.updateMovies(for: 10, with: resultsPage1)
         
-        // [WHEN] Sayfa işleme fonksiyonunu çağır
-        let updatedEntry = sut.processNextPage(currentEntry: currentEntry, newResults: newResults)
+        // [WHEN] Sonraki sayfa istenir
+        let nextPage = sut.getNextPageForCurrentGenre()
         
-        // [THEN] Sadece benzersiz olan filmi eklemeli (toplam 2 film)
-        XCTAssertEqual(updatedEntry?.movies.count, 2)
-        XCTAssertEqual(updatedEntry?.movies.last?.title, "Film 2 - Unique")
-    }
-
-    func test_processNextPage_withEmptyNewResults_returnsNil() {
-        // [GIVEN] Servisten boş bir 'results' dizisi geldi
-        let currentEntry = GenreCacheEntry(movies: [], currentPage: 1, lastContentOffset: .zero)
-        let newResults = DiscoverResultsUIModel.stub(page: 2, results: [])
-        
-        // [WHEN] Sayfa işleme fonksiyonunu çağır
-        let updatedEntry = sut.processNextPage(currentEntry: currentEntry, newResults: newResults)
-        
-        // [THEN] Boş sonuç geldiği için nil dönmeli
-        XCTAssertNil(updatedEntry)
+        // [THEN] 2. sayfayı (1 + 1) döndürmeli
+        XCTAssertEqual(nextPage, 2)
     }
 }

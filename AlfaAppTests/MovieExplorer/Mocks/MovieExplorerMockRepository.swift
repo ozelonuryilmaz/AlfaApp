@@ -14,14 +14,19 @@ final class MockMovieExplorerRepository: IMovieExplorerRepository {
     var fetchGenresResult: Result<GenresUIModel, Error>!
     var fetchDiscoverResult: Result<DiscoverResultsUIModel, Error>!
     
-    private(set) var invokedFetchDiscoverParams: (genreId: Int, page: Int)?
+    private(set) var invokedFetchDiscoverParams: (genreId: Int, page: Int, forceRefresh: Bool)?
+    private(set) var invokedClearCache: Bool = false
     
     func fetchGenres() async throws -> GenresUIModel {
         try fetchGenresResult.get()
     }
     
-    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel {
-        invokedFetchDiscoverParams = (genreId, page)
+    func fetchDiscover(genreId: Int, page: Int, forceRefresh: Bool) async throws -> DiscoverResultsUIModel {
+        invokedFetchDiscoverParams = (genreId, page, forceRefresh)
         return try fetchDiscoverResult.get()
+    }
+    
+    func clearCache() {
+        invokedClearCache = true
     }
 }
