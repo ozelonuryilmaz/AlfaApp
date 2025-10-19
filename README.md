@@ -3,8 +3,8 @@
 AlfaApp, modüler **Clean Architecture** ve **MVVM-C** prensipleri üzerine inşa edilmiş, performans ve güvenlik odaklı modern bir iOS uygulamasıdır. Bu proje, kullanıcıların filmleri keşfetmesini sağlayan `MovieExplorer` ve özel `AlfaPlayerKit (AVPlayer)` ile video oynatma deneyimi sunan `MoviePlayer` modüllerini içermektedir.
 
 <div style="display: flex; gap: 10px;">
-  <img src="https://raw.githubusercontent.com/ozelonuryilmaz/AlfaApp/main/AlfaApp/AppCore/Resources/Assets/MovieExplorer.gif" alt="MovieExplorer" width="300"/>
-  <img src="https://raw.githubusercontent.com/ozelonuryilmaz/AlfaApp/main/AlfaApp/AppCore/Resources/Assets/MoviePlayer.gif" alt="MoviePlayer" width="300"/>
+  <img src="https://raw.githubusercontent.com/ozelonuryilmaz/AlfaApp/tree/main/AlfaApp/AppCore/Resources/Assets/MovieExplorer.gif" alt="MovieExplorer" width="300"/>
+  <img src="https://raw.githubusercontent.com/ozelonuryilmaz/AlfaApp/tree/main/AlfaApp/AppCore/Resources/Assets/MoviePlayer.gif" alt="MoviePlayer" width="300"/>
 </div>
 
 ---
@@ -38,8 +38,8 @@ Proje, sürdürülebilir ve ölçeklenebilir bir yapı sağlamak için endüstri
 ## 🛠️ Teknoloji Yığını
 
 ### Core
-* **Platform**: iOS 16.4
-* **Dil**: Swift 6.2
+* **Platform**: iOS 15.0+
+* **Dil**: Swift 5.x
 * **UI**: Programmatic UIKit (Auto Layout)
 * **Concurrency**: Combine, Async/await, Thread Management
 
@@ -107,3 +107,10 @@ Projenin kararlılığını ve güvenilirliğini sağlamak amacıyla testler yaz
     * `AlfaPlayerKit` (SPM) kütüphanesinin fonksiyonelliği, yeni nesil `swift-testing` kütüphanesi kullanılarak test edilmiştir.
 
 ---
+
+## 📋 Gereksinimler
+
+* iOS 15.0+
+* Xcode 14.0+
+* Swift 5.7+
+
