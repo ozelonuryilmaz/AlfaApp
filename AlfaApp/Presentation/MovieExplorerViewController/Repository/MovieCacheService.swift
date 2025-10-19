@@ -10,7 +10,7 @@ import Foundation
 
 // TODO: CacheService için Repository,.. kurgulanmalı. Tek yerden güncelleme yapılmaya devam edilmeli
 
-// TODO: Memory'deki cache kullanımına dikkat edilmelidir. Explorer sayfası kapandığında temizlendiği kontrol edilmelidir.
+// TODO: Memory'ye aşırı cache yüklenmesine dikkat edilmelidir. Explorer sayfası kapandığında temizlendiği kontrol edilmelidir.
 
 
 protocol IMovieCacheService: AnyObject {
