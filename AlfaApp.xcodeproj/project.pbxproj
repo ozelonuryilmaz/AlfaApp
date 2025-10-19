@@ -48,7 +48,11 @@
 		67FCB9822E9D4A57005C63B7 /* Exceptions for "AlfaApp" folder in "AlfaApp" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppCore/Resources/Assets/MovieExplorer.gif,
+				AppCore/Resources/Assets/MoviePlayer.gif,
 				AppCore/Resources/Info.plist,
+				"AppCore/Template/Alfa iOS Templates.zip",
+				AppCore/Template/README.md,
 			);
 			target = 67FCB9592E9D4A56005C63B7 /* AlfaApp */;
 		};
