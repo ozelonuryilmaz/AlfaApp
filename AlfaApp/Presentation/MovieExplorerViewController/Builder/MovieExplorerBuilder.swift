@@ -14,7 +14,14 @@ enum MovieExplorerBuilder {
         
         let genreUsecase = GenreUseCaseProvider.makeGenreUseCase()
         let discoverUsecase = DiscoverUseCaseProvider.makeDiscoverUseCase()
-        let repository: IMovieExplorerRepository = MovieExplorerRepository(genreUsecase: genreUsecase, discoverUsecase: discoverUsecase)
+        
+        let languageProvider: IDeviceLanguageProvider = DeviceLanguageProvider()
+        
+        let repository: IMovieExplorerRepository = MovieExplorerRepository(
+            genreUsecase: genreUsecase,
+            discoverUsecase: discoverUsecase,
+            languageProvider: languageProvider
+        )
         
         let vmLogic: IMovieExplorerVMLogic = MovieExplorerVMLogic()
 

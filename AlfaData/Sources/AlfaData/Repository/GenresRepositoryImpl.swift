@@ -18,9 +18,9 @@ final public class GenresRepositoryImpl: IGenresRepository {
         self.genresMapper = genresMapper
     }
     
-    public func fetchGenres() async throws -> GenresEntity {
+    public func fetchGenres(language: String) async throws -> GenresEntity {
         do {
-            let dto: GenresDTO = try await remoteDataSource.fetchGenres()
+            let dto: GenresDTO = try await remoteDataSource.fetchGenres(language: language)
             return genresMapper.map(dto: dto)
         } catch {
             throw error

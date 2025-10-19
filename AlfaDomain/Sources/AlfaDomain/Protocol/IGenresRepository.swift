@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol IGenresRepository {
-    func fetchGenres() async throws -> GenresEntity
+    func fetchGenres(language: String) async throws -> GenresEntity
 }

@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol IGenresRemoteDataSource {
-    func fetchGenres() async throws -> GenresDTO
+    func fetchGenres(language: String) async throws -> GenresDTO
 }
 
 final public class GenresRemoteDataSource: IGenresRemoteDataSource {
@@ -21,11 +21,12 @@ final public class GenresRemoteDataSource: IGenresRemoteDataSource {
         self.securityManager = securityManager
     }
 
-    public func fetchGenres() async throws -> GenresDTO {
+    public func fetchGenres(language: String) async throws -> GenresDTO {
         
         let apiKey: String = try await securityManager.fetchSecureApiKey()
+        let queryItems: [URLQueryItem] = [URLQueryItem(name: "language", value: language)]
         
-        guard let request: URLRequest = try? APIRequest.genres.buildRequest(apiKey: apiKey) else {
+        guard let request: URLRequest = try? APIRequest.genres.buildRequest(apiKey: apiKey, extraQueryItems: queryItems) else {
             throw NetworkError.invalidURL
         }
         

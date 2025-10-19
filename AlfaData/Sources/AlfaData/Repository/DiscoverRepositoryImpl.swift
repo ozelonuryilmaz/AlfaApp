@@ -18,9 +18,9 @@ final public class DiscoverRepositoryImpl: IDiscoverRepository {
         self.discoverMapper = discoverMapper
     }
     
-    public func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsEntity {
+    public func fetchDiscover(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity {
         do {
-            let dto: DiscoverResultsDTO = try await remoteDataSource.fetchDiscover(genreId: genreId, page: page)
+            let dto: DiscoverResultsDTO = try await remoteDataSource.fetchDiscover(language: language, genreId: genreId, page: page)
             return discoverMapper.map(dto: dto)
         } catch {
             throw error

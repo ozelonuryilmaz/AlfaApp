@@ -8,5 +8,5 @@
 import Foundation
 
 public protocol IDiscoverRepository {
-    func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsEntity
+    func fetchDiscover(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity
 }

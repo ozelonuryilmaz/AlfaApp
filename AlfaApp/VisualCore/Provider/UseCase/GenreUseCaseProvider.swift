@@ -1,5 +1,5 @@
 //
-//  DependencyProvider.swift
+//  GenreUseCaseProvider.swift
 //  AlfaApp
 //
 //  Created by Onur Yilmaz on 15.10.2025.

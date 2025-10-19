@@ -31,12 +31,11 @@ public enum APIRequest {
     var queryItems: [URLQueryItem] {
         switch self {
         case .genres:
-            return [URLQueryItem(name: "language", value: "en-US")]
+            return []
         case .discover:
             return [URLQueryItem(name: "sort_by", value: "popularity.desc"),
                     URLQueryItem(name: "include_adult", value: "false"),
-                    URLQueryItem(name: "include_video", value: "false"),
-                    URLQueryItem(name: "language", value: "en-US")]
+                    URLQueryItem(name: "include_video", value: "false")]
         }
     }
 }

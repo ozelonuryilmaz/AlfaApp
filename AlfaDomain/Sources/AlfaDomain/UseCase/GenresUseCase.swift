@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol IGenresUseCase {
-    func execute() async throws -> GenresEntity
+    func execute(language: String) async throws -> GenresEntity
 }
 
 public struct GenresUseCase: IGenresUseCase {
@@ -18,9 +18,9 @@ public struct GenresUseCase: IGenresUseCase {
         self.genresRepository = genresRepository
     }
 
-    public func execute() async throws -> GenresEntity {
+    public func execute(language: String) async throws -> GenresEntity {
         do {
-            let genres: GenresEntity = try await genresRepository.fetchGenres()
+            let genres: GenresEntity = try await genresRepository.fetchGenres(language: language)
             return genres
         } catch {
             throw error

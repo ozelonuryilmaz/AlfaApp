@@ -8,7 +8,7 @@
 import Foundation
 
 public protocol IDiscoverUseCase {
-    func execute(genreId: Int, page: Int) async throws -> DiscoverResultsEntity
+    func execute(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity
 }
 
 public struct DiscoverUseCase: IDiscoverUseCase {
@@ -18,9 +18,9 @@ public struct DiscoverUseCase: IDiscoverUseCase {
         self.discoverRepository = discoverRepository
     }
 
-    public func execute(genreId: Int, page: Int) async throws -> DiscoverResultsEntity {
+    public func execute(language: String, genreId: Int, page: Int) async throws -> DiscoverResultsEntity {
         do {
-            let discover: DiscoverResultsEntity = try await discoverRepository.fetchDiscover(genreId: genreId, page: page)
+            let discover: DiscoverResultsEntity = try await discoverRepository.fetchDiscover(language: language, genreId: genreId, page: page)
             return discover
         } catch {
             throw error

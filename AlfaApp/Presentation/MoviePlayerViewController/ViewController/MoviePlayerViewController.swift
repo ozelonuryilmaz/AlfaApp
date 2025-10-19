@@ -10,6 +10,8 @@ import UIKit
 import AVFoundation
 import Combine
 
+// TODO: Ekran kaydı alınmaması sağlanmalıdır
+
 final class MoviePlayerViewController: AlfaLandscapeViewController<MoviePlayerRootView> {
     private let viewModel: IMoviePlayerViewModel
     private var playerObservers: Set<AnyCancellable> = []

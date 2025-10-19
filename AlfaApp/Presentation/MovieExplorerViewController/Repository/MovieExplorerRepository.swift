@@ -19,16 +19,20 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
     
     private let genreUsecase: IGenresUseCase
     private let discoverUsecase: IDiscoverUseCase
+    private let languageProvider: IDeviceLanguageProvider
     
     init(genreUsecase: IGenresUseCase,
-         discoverUsecase: IDiscoverUseCase) {
+         discoverUsecase: IDiscoverUseCase,
+         languageProvider: IDeviceLanguageProvider) {
         self.genreUsecase = genreUsecase
         self.discoverUsecase = discoverUsecase
+        self.languageProvider = languageProvider
     }
     
     func fetchGenres() async throws -> GenresUIModel {
         do {
-            let entity: GenresEntity = try await genreUsecase.execute()
+            let lang = languageProvider.currentLanguageCode
+            let entity: GenresEntity = try await genreUsecase.execute(language: lang)
             let mappedGenres = entity.genres.map { genreEntity in
                 return GenreUIModel(id: genreEntity.id, name: genreEntity.name)
             }
@@ -41,7 +45,8 @@ final class MovieExplorerRepository: BaseRepository, IMovieExplorerRepository {
     
     func fetchDiscover(genreId: Int, page: Int) async throws -> DiscoverResultsUIModel {
         do {
-            let entity: DiscoverResultsEntity = try await discoverUsecase.execute(genreId: genreId, page: page)
+            let lang = languageProvider.currentLanguageCode
+            let entity: DiscoverResultsEntity = try await discoverUsecase.execute(language: lang, genreId: genreId, page: page)
             let mappedDiscover = entity.results.map { discoverEntity in
                 return DiscoverResultUIModel(id: discoverEntity.id, title: discoverEntity.title, posterURL: discoverEntity.posterURL)
             }
